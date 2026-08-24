@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-auth-pending="true">
+<head>
+  <meta charset="utf-8">
+  <title>Appraisal — Employee Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="sidebar col-md-3 col-lg-2 d-md-block">
+        <div id="sidebar-placeholder"></div>
+      </nav>
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-4">
+        <div class="d-flex align-items-center justify-content-between pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2 mb-0" id="appraisal-cycle-name"></h1>
+          <span id="appraisal-status"></span>
+        </div>
+
+        <div id="appraisal-error" class="alert alert-danger" hidden></div>
+
+        <form id="self-review-form" class="card p-3 mb-3" style="max-width: 640px;">
+          <h2 class="h6">Self-review</h2>
+          <div class="mb-3">
+            <label class="form-label" for="self-rating">Rating</label>
+            <select id="self-rating" class="form-select" required></select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="self-comments">Comments</label>
+            <textarea id="self-comments" class="form-control" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary align-self-start">Submit self-review</button>
+        </form>
+        <div id="self-review-summary" class="card p-3 mb-3" style="max-width: 640px;" hidden></div>
+
+        <form id="manager-review-form" class="card p-3 mb-3" style="max-width: 640px;" hidden>
+          <h2 class="h6">Manager review</h2>
+          <div class="mb-3">
+            <label class="form-label" for="manager-rating">Overall rating</label>
+            <select id="manager-rating" class="form-select" required></select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="manager-comments">Overall comments</label>
+            <textarea id="manager-comments" class="form-control" rows="3"></textarea>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <label class="form-label mb-0">Evaluation categories</label>
+            <button type="button" id="add-category-btn" class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus-lg"></i> Add category</button>
+          </div>
+          <p class="text-body-secondary small">Break the review into whatever areas matter for this role — e.g. Coding, Core Values, Availability — each scored 1–5 with its own comment. Add a sub-section under a category for a finer-grained breakdown.</p>
+          <div id="eval-categories" class="mb-3"></div>
+
+          <button type="submit" class="btn btn-primary align-self-start">Finalize review</button>
+        </form>
+        <div id="manager-review-summary" class="card p-3 mb-3" style="max-width: 640px;" hidden></div>
+
+        <h2 class="h6">Goals</h2>
+        <ul class="list-group mb-3" id="goals-list" style="max-width: 640px;"></ul>
+        <form id="add-goal-form" class="d-flex gap-2" style="max-width: 640px;">
+          <input type="text" id="new-goal" class="form-control" placeholder="New goal" required>
+          <button type="submit" class="btn btn-outline-secondary text-nowrap">Add</button>
+        </form>
+      </main>
+    </div>
+  </div>
+  <div id="footer-placeholder"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api/api-client.js"></script>
+  <script src="js/api/api-client-mock.js"></script>
+  <script src="js/api/api-router.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/status-badge.js"></script>
+  <script src="js/eval-categories.js"></script>
+  <script src="js/page/appraisal-view.js"></script>
+</body>
+</html>

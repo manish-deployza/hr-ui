@@ -1,0 +1,408 @@
+/* Design tokens — Google Cloud Console visual language (see
+   Romil Ziniapps/product-assess-ui/prompts/design-system.md), adopted
+   app-wide per explicit instruction, superseding this file's earlier
+   teal/amber/Fraunces identity (discussion.md #4/#13). */
+:root {
+  --color-primary: #1a73e8;
+  --color-primary-hover: #1765cc;
+  --color-primary-light: #e8f0fe;
+  --color-accent: #1a73e8;
+  --color-danger: #d93025;
+  --color-success: #1e8e3e;
+  --color-warning: #f9ab00;
+  --color-text: #202124;
+  --color-text-body: #3c4043;
+  --color-text-secondary: #5f6368;
+  --color-border: #dadce0;
+  --color-bg: #f8f9fa;
+  --color-surface: #fff;
+  --radius-card: 8px;
+  --radius-button: 4px;
+  --font-display: "Roboto", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "Roboto", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text-body);
+  background: var(--color-bg);
+}
+
+a {
+  color: var(--color-primary);
+}
+a:hover {
+  color: var(--color-primary-hover);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* So an in-page anchor jump (e.g. sidebar submenu links into
+   hr-employees.html) doesn't land the heading underneath the sticky navbar. */
+h2[id], label[id] {
+  scroll-margin-top: 64px;
+}
+
+/* 1-5 score dots on the manager's customizable appraisal categories
+   (js/page/appraisal-view.js) — small circles, both the editable radio
+   buttons and the read-only summary spans reuse this shape. */
+.score-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+.score-dots .score-circle {
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .8rem;
+}
+.score-dots span.score-circle {
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+.score-dots span.score-circle.filled {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 2px rgba(60, 64, 67, .3), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  /* Clips flush-edge content (e.g. a table wrapped directly in a .card, no
+     padding) to the card's rounded corners — otherwise the table's square
+     corners visibly poke past the border-radius. */
+  overflow: hidden;
+}
+
+.btn {
+  border-radius: var(--radius-button);
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
+
+.btn-outline-primary, .btn-outline-secondary, .btn-link {
+  color: var(--color-primary);
+}
+
+.btn-outline-primary:hover, .btn-outline-secondary:hover {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.btn-icon-only {
+  padding: 4px 8px;
+  line-height: 1;
+}
+
+/* Forms — focus ring matches product-assess-ui's design-system.md rule. */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, .25);
+}
+.form-control:disabled,
+.form-control[readonly] {
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+}
+.form-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+/* Table header — light background + small uppercase labels, applied once
+   here rather than per-page since every table in the app follows it. */
+.table > thead {
+  background: var(--color-bg);
+}
+.table > thead th {
+  border-bottom-width: 1px;
+  border-bottom-color: var(--color-border);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+.table > tbody td {
+  font-size: 13px;
+}
+.table > tbody tr:hover {
+  background-color: var(--color-bg);
+}
+
+/* StatusBadge colors — see js/status-badge.js. A small dot plus the label
+   (never color alone, per 08-frontend-design.md's accessibility rule) so a
+   table full of statuses is scannable at a glance without reading text. */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.status-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: currentColor;
+  flex: none;
+}
+.status-badge--pending { background: #fef7e0; color: var(--color-warning); }
+.status-badge--approved { background: #e6f4ea; color: var(--color-success); }
+.status-badge--rejected { background: #fce8e6; color: var(--color-danger); }
+.status-badge--neutral { background: #f1f3f4; color: var(--color-text-secondary); }
+
+/* Shell — adapted from Bootstrap's official Dashboard example
+   (getbootstrap.com/docs/5.0/examples/dashboard/): top navbar +
+   light, bordered sidebar that collapses into an offcanvas below md.
+   See components/header.html, components/sidebar.html, js/loader.js. */
+
+.navbar {
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.navbar-brand {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -.5px;
+  color: var(--color-primary) !important;
+}
+
+.sidebar {
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+}
+
+/* Breadcrumb — navbar is now a light surface, so it reverts to the
+   default dark-on-light Bootstrap breadcrumb styling; secondary text tone
+   matches the rest of the topbar. */
+.navbar .breadcrumb-item, .navbar .breadcrumb-item a {
+  color: var(--color-text-secondary);
+}
+.navbar .breadcrumb-item a:hover {
+  color: var(--color-text);
+}
+.navbar .breadcrumb-item.active {
+  color: var(--color-text);
+}
+.navbar .breadcrumb-item + .breadcrumb-item::before {
+  color: var(--color-border);
+}
+
+/* md+ only — below md the offcanvas is fixed/hidden and this would render
+ * as an empty full-height colored box (an earlier bug here).
+ *
+ * Two separate heights, on purpose: min-height on the outer .sidebar is a
+ * *floor* — on a short page, .row would otherwise only be as tall as its
+ * content, and .sidebar's background would stop partway down the viewport
+ * instead of reaching the bottom. On a long page, flex's default
+ * align-items: stretch still lets .sidebar grow past that floor to match
+ * .main's full height, so the background reaches the bottom of the actual
+ * page too, not just one viewport. .offcanvas-md's fixed height is
+ * unrelated — it just bounds+scrolls the nav *list* (overflow-y-auto in
+ * components/sidebar.html) to one viewport, so a long expanded nav doesn't
+ * grow past the visible sticky area. */
+@media (min-width: 768px) {
+  .sidebar {
+    position: sticky;
+    top: 48px;
+    min-height: calc(100vh - 48px);
+  }
+  .sidebar .offcanvas-md {
+    height: calc(100vh - 48px);
+  }
+}
+
+.sidebar .nav-link {
+  font-size: 14px;
+  color: var(--color-text);
+  border-radius: 0;
+  border-left: 3px solid transparent;
+  transition: background-color 0.1s, border-color 0.1s;
+}
+
+.sidebar .nav-link .bi {
+  margin-right: 0.35rem;
+  color: var(--color-text-secondary);
+}
+
+.sidebar .nav-link:hover {
+  background: var(--color-bg);
+}
+
+/* Left accent rail + light-blue pill, matching product-assess-ui's active
+   sidebar-link treatment exactly. */
+.sidebar .nav-link.active {
+  background: var(--color-primary-light);
+  border-left-color: var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.sidebar .nav-link.active .bi {
+  color: var(--color-primary);
+}
+
+.sidebar-heading {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: var(--color-text-secondary);
+}
+
+/* Collapsible "Manager"/"HR Admin" section headings, and the nested
+   "Employees" submenu toggle — Bootstrap's collapse JS toggles .collapsed on
+   the trigger itself, so the chevron direction is driven off that rather
+   than a separate open/closed class. */
+.sidebar-heading button {
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+}
+.sidebar [data-bs-toggle="collapse"] .bi-chevron-down {
+  transition: transform 0.2s;
+}
+.sidebar [data-bs-toggle="collapse"].collapsed .bi-chevron-down {
+  transform: rotate(-90deg);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* Hides the page until auth-guard.js resolves the session (see js/auth-guard.js). */
+html[data-auth-pending] body {
+  visibility: hidden;
+}
+
+/* ============================================================
+   Standard App Modal — mirrors product-assess-ui's .app-modal
+   (create/edit/delete popups across the app; see prompts/design-system.md
+   "Modals").
+   ============================================================ */
+.app-modal .modal-content {
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+}
+.app-modal .modal-header {
+  border-bottom: 1px solid var(--color-border);
+  padding: 16px 20px;
+}
+.app-modal .modal-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+.app-modal .modal-body { padding: 20px; }
+.app-modal .modal-footer {
+  border-top: 1px solid var(--color-border);
+  padding: 12px 20px;
+  gap: 8px;
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: #fff;
+  border-color: var(--color-danger);
+}
+.btn-danger:hover,
+.btn-danger:focus {
+  background: #b7271f;
+  border-color: #b7271f;
+  color: #fff;
+}
+
+/* ============================================================
+   Responsive tiers — layered on top of Bootstrap's own grid
+   breakpoints (576/768/992/1200/1400, still driving col-md-*,
+   offcanvas-md, d-md-none throughout the shell/pages). These
+   rules tune type scale, spacing, and table/header density
+   within the app's own requested tiers; see discussion.md.
+   ============================================================ */
+
+/* Mobile (small): 320–479px — smallest phones, tightest layout. */
+@media (max-width: 479.98px) {
+  body { font-size: 14px; }
+  main { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+  .table { font-size: 0.75rem; }
+  .table td, .table th { padding: 0.4rem; }
+  #header-user-name { display: none; }
+  #header-signout .btn-label { display: none; }
+}
+
+/* Mobile (large): 480–639px — standard phones. */
+@media (min-width: 480px) and (max-width: 639.98px) {
+  body { font-size: 15px; }
+  .table { font-size: 0.8rem; }
+  #header-user-name { display: none; }
+}
+
+/* Tablet: 640–1023px — iPads, small tablets. Note Bootstrap's own md/lg
+   breakpoints (768/992) fall inside this band, so the sidebar's
+   offcanvas-vs-persistent switch happens partway through this tier —
+   that's existing Bootstrap grid behavior, not overridden here. */
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  body { font-size: 16px; }
+}
+
+/* Laptop / Desktop: 1024–1439px. */
+@media (min-width: 1024px) and (max-width: 1439.98px) {
+  body { font-size: 16px; }
+}
+
+/* Large Desktop: 1440–1919px — a bit more breathing room. */
+@media (min-width: 1440px) {
+  body { font-size: 16px; }
+  main { padding-left: 2rem !important; padding-right: 2rem !important; }
+}

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" data-auth-pending="true">
+<head>
+  <meta charset="utf-8">
+  <title>One-on-Ones — Employee Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="sidebar col-md-3 col-lg-2 d-md-block">
+        <div id="sidebar-placeholder"></div>
+      </nav>
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-4">
+        <div class="d-flex align-items-center justify-content-between pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2 mb-0">One-on-Ones</h1>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#session-modal">
+            <i class="bi bi-plus-lg"></i> Schedule session
+          </button>
+        </div>
+        <div id="sessions-error" class="alert alert-danger" hidden></div>
+        <input type="search" class="form-control mb-2" style="max-width: 320px;" placeholder="Search…" data-filter-target="#sessions-body tr">
+
+        <div class="card">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead><tr><th>With</th><th>Scheduled</th><th>Status</th><th></th></tr></thead>
+              <tbody id="sessions-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Schedule session popup -->
+        <div class="modal fade app-modal" id="session-modal" tabindex="-1" aria-labelledby="session-modal-title" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="session-modal-title">Schedule a session</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="new-session-form">
+                  <div class="row g-3">
+                    <div class="col-12" id="session-with-wrap" hidden>
+                      <label class="form-label" for="session-with">With</label>
+                      <input type="text" id="session-with" class="form-control" list="session-with-options" autocomplete="off" required>
+                      <datalist id="session-with-options"></datalist>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="session-datetime">Scheduled for</label>
+                      <input type="datetime-local" id="session-datetime" class="form-control" required>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="new-session-form" class="btn btn-primary">Schedule session</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div id="footer-placeholder"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api/api-client.js"></script>
+  <script src="js/api/api-client-mock.js"></script>
+  <script src="js/api/api-router.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/list-filter.js"></script>
+  <script src="js/status-badge.js"></script>
+  <script src="js/page/one-on-ones.js"></script>
+</body>
+</html>

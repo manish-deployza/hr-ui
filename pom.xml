@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.deployza</groupId>
+  <artifactId>leave-management-frontend</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    <finalName>leave-management</finalName>
+    <plugins>
+      <!-- Static site (HTML/CSS/JS, mock API only — see js/config.js) packaged
+           as a WAR so it can be dropped into the same Tomcat that will
+           eventually host the real Spring backend (TechSpec.md: "WAR/Tomcat").
+           No src/main/webapp layout — the project root already *is* the
+           webapp root, so we point the plugin at it directly instead of
+           duplicating every file into a Maven-standard subfolder. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.4.0</version>
+        <configuration>
+          <warSourceDirectory>${basedir}</warSourceDirectory>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <packagingExcludes>pom.xml,target/**,*.md,.git/**</packagingExcludes>
+        </configuration>
+      </plugin>
+
+      <!-- `mvn jetty:run` serves the WAR locally without installing a
+           separate Tomcat — swap for a real Tomcat deploy once the backend
+           module joins this WAR. -->
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>11.0.24</version>
+        <configuration>
+          <!-- No src/main/webapp dir — fronted/ itself is the webapp root.
+               The plugin logs this as a "read-only" parameter warning but
+               still honors it; without it the plugin serves an empty
+               target/webapp-synth/ instead (verified). -->
+          <webAppSourceDirectory>${basedir}</webAppSourceDirectory>
+          <webApp>
+            <contextPath>/</contextPath>
+          </webApp>
+          <httpConnector>
+            <port>8080</port>
+          </httpConnector>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

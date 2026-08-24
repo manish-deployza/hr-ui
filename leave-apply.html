@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" data-auth-pending="true">
+<head>
+  <meta charset="utf-8">
+  <title>Apply for Leave — Employee Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="sidebar col-md-3 col-lg-2 d-md-block">
+        <div id="sidebar-placeholder"></div>
+      </nav>
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-4">
+        <h1 class="h2 pt-3 pb-2 mb-3 border-bottom">Apply for leave</h1>
+        <div id="apply-success" class="alert alert-success" hidden></div>
+        <div id="apply-error" class="alert alert-danger" hidden></div>
+        <form class="needs-validation" novalidate>
+          <div id="leave-request-form" class="card p-4" style="max-width: 640px;"></div>
+        </form>
+      </main>
+    </div>
+  </div>
+  <div id="footer-placeholder"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api/api-client.js"></script>
+  <script src="js/api/api-client-mock.js"></script>
+  <script src="js/api/api-router.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/leave-request-form.js"></script>
+  <script src="js/page/leave-apply.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!-- Injected into #sidebar-placeholder by js/loader.js, inside the page's
+     <div class="sidebar col-md-3 col-lg-2 ...">. The offcanvas wrapper is
+     what makes this collapse into a slide-out panel below md width, matching
+     Bootstrap's Dashboard example. Manager/HR sections start hidden and are
+     revealed by js/auth-guard.js based on role/isManager — discussion.md #6. -->
+<div class="offcanvas-md offcanvas-end" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="sidebarMenuLabel">Employee Hub</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body d-md-flex flex-column p-0 pt-md-3 overflow-y-auto">
+    <ul class="nav flex-column">
+      <li class="nav-item"><a class="nav-link" href="dashboard.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="leave-apply.html"><i class="bi bi-plus-circle"></i> Apply for Leave</a></li>
+      <li class="nav-item"><a class="nav-link" href="leave-history.html"><i class="bi bi-clock-history"></i> My Leave Requests</a></li>
+      <li class="nav-item"><a class="nav-link" href="one-on-ones.html"><i class="bi bi-chat-dots"></i> One-on-Ones</a></li>
+      <li class="nav-item"><a class="nav-link" href="appraisals.html"><i class="bi bi-star"></i> Appraisals</a></li>
+      <li class="nav-item"><a class="nav-link" href="profile.html"><i class="bi bi-person"></i> Profile</a></li>
+    </ul>
+
+    <!-- Role gating (data-requires-manager / data-requires-role, enforced by
+         js/auth-guard.js) temporarily disabled so every section is visible
+         during development, regardless of the signed-in role. Re-add
+         `data-requires-manager` / `data-requires-role="HR_ADMIN"` (plus
+         `hidden`) on these two wrappers to restore RBAC-based hiding. -->
+    <div>
+      <h6 class="sidebar-heading px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+        <button class="btn btn-link p-0 w-100 d-flex align-items-center justify-content-between text-body-secondary text-uppercase text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#manager-nav" aria-expanded="true" aria-controls="manager-nav">
+          Manager (Jordan Lee)
+          <i class="bi bi-chevron-down"></i>
+        </button>
+      </h6>
+      <ul class="nav flex-column collapse show" id="manager-nav">
+        <li class="nav-item"><a class="nav-link" href="manager-team.html"><i class="bi bi-people"></i> Direct Reports</a></li>
+        <li class="nav-item"><a class="nav-link" href="manager-team-requests.html"><i class="bi bi-inbox"></i> Team Leave Requests</a></li>
+        <li class="nav-item"><a class="nav-link" href="manager-one-on-ones.html"><i class="bi bi-chat-dots"></i> Team One-on-Ones</a></li>
+        <li class="nav-item"><a class="nav-link" href="manager-appraisals.html"><i class="bi bi-star-half"></i> Team Appraisals</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h6 class="sidebar-heading px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+        <button class="btn btn-link p-0 w-100 d-flex align-items-center justify-content-between text-body-secondary text-uppercase text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#hr-admin-nav" aria-expanded="true" aria-controls="hr-admin-nav">
+          HR Admin
+          <i class="bi bi-chevron-down"></i>
+        </button>
+      </h6>
+      <ul class="nav flex-column mb-auto collapse show" id="hr-admin-nav">
+        <li class="nav-item"><a class="nav-link" href="hr-requests.html"><i class="bi bi-inbox-fill"></i> All Leave Requests</a></li>
+        <li class="nav-item"><a class="nav-link" href="hr-employees.html"><i class="bi bi-people-fill"></i> Employees</a></li>
+        <li class="nav-item"><a class="nav-link" href="hr-leave-types.html"><i class="bi bi-list-check"></i> Leave Types</a></li>
+        <li class="nav-item"><a class="nav-link" href="hr-holidays.html"><i class="bi bi-calendar-event"></i> Holidays</a></li>
+        <li class="nav-item"><a class="nav-link" href="hr-audit-log.html"><i class="bi bi-journal-text"></i> Audit Log</a></li>
+        <li class="nav-item"><a class="nav-link" href="hr-appraisal-cycles.html"><i class="bi bi-award"></i> Appraisal Cycles</a></li>
+      </ul>
+    </div>
+  </div>
+</div>

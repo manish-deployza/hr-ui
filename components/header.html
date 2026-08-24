@@ -1,0 +1,19 @@
+<!-- Top navbar — adapted from Bootstrap's Dashboard example. Injected into
+     #header-placeholder by js/loader.js. The toggler opens the sidebar's
+     offcanvas below md width; see components/sidebar.html. -->
+<header class="navbar navbar-light sticky-top flex-md-nowrap p-0 shadow-sm">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="dashboard.html">Employee Hub</a>
+  <button class="navbar-toggler d-md-none collapsed" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <nav aria-label="breadcrumb" class="d-none d-md-block ms-3">
+    <ol class="breadcrumb mb-0" id="header-breadcrumb"></ol>
+  </nav>
+  <div class="navbar-nav flex-row d-flex ms-auto me-3 align-items-center gap-3">
+    <span id="notification-bell"></span>
+    <a href="profile.html" id="header-user-name" class="nav-link"></a>
+    <button id="header-signout" class="btn btn-sm btn-outline-secondary">
+      <i class="bi bi-box-arrow-right"></i> <span class="btn-label">Sign out</span>
+    </button>
+  </div>
+</header>

@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en" data-auth-pending="true">
+<head>
+  <meta charset="utf-8">
+  <title>Employees — Employee Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="sidebar col-md-3 col-lg-2 d-md-block">
+        <div id="sidebar-placeholder"></div>
+      </nav>
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-4">
+        <div class="d-flex align-items-center justify-content-between pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2 mb-0">Employees</h1>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#reassign-modal">
+              <i class="bi bi-diagram-3"></i> Reassign team
+            </button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#bulk-upload-modal">
+              <i class="bi bi-upload"></i> Bulk upload
+            </button>
+            <button type="button" class="btn btn-primary" id="add-employee" data-bs-toggle="modal" data-bs-target="#employee-modal">
+              <i class="bi bi-plus-lg"></i> Add employee
+            </button>
+          </div>
+        </div>
+        <div id="hr-employees-error" class="alert alert-danger" hidden></div>
+        <div id="hr-employees-success" class="alert alert-success" hidden></div>
+        <div class="row g-2 mb-2">
+          <div class="col-sm-4">
+            <input type="search" id="filter-employee-search" class="form-control" placeholder="Search employees…">
+          </div>
+          <div class="col-sm-4">
+            <select id="filter-employee-manager" class="form-select">
+              <option value="">All managers</option>
+            </select>
+          </div>
+        </div>
+        <div class="card mb-4" id="update-employee">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead>
+              <tbody id="hr-employees-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Add/Edit employee popup — shared by the "Add employee" button
+             above and each row's Edit action (js/page/hr-employees.js). -->
+        <div class="modal fade app-modal" id="employee-modal" tabindex="-1" aria-labelledby="employee-modal-title" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="employee-modal-title">Add employee</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="add-employee-form">
+                  <div class="row g-3">
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-code">Employee ID</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-upc-scan"></i></span>
+                        <input type="text" id="new-emp-code" class="form-control" placeholder="e.g. DPZ-0142" required>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-name">Name</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" id="new-emp-name" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-email">Email</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" id="new-emp-email" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-phone">Phone</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                        <input type="tel" id="new-emp-phone" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-password">Temporary password</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-key"></i></span>
+                        <input type="password" id="new-emp-password" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-doj">Date of joining</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-calendar-plus"></i></span>
+                        <input type="date" id="new-emp-doj" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-doe">Date of exit</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-calendar-x"></i></span>
+                        <input type="date" id="new-emp-doe" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-type">Employee type</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-tag"></i></span>
+                        <select id="new-emp-type" class="form-select" required>
+                          <option value="REGULAR">Regular</option>
+                          <option value="INTERN">Intern</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-status">Status</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-toggle-on"></i></span>
+                        <select id="new-emp-status" class="form-select" required>
+                          <option value="ACTIVE">Active</option>
+                          <option value="ON_NOTICE">On notice</option>
+                          <option value="EXITED">Exited</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-designation">Designation</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                        <input type="text" id="new-emp-designation" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-department">Department</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-building"></i></span>
+                        <input type="text" id="new-emp-department" class="form-control">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-manager">Manager</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-diagram-3"></i></span>
+                        <select id="new-emp-manager" class="form-select">
+                          <option value="">No manager (top of hierarchy)</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-salary">Basic salary</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-cash-coin"></i></span>
+                        <input type="number" id="new-emp-salary" class="form-control" min="0" step="0.01">
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="new-emp-role">Role</label>
+                      <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                        <select id="new-emp-role" class="form-select" required>
+                          <option value="EMPLOYEE">Employee</option>
+                          <option value="HR_ADMIN">HR Admin</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-check">
+                        <input type="checkbox" id="new-emp-force-reset" class="form-check-input" checked>
+                        <label class="form-check-label" for="new-emp-force-reset"><i class="bi bi-shield-exclamation"></i> Force password reset on first login</label>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="add-employee-form" class="btn btn-primary" id="add-employee-submit"><i class="bi bi-check-circle"></i> <span id="add-employee-submit-label">Add employee</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Employee details popup — opened by clicking a name in the table
+             (js/page/hr-employees.js); its Edit button hands off to the
+             add/edit modal above instead of duplicating that form. -->
+        <div class="modal fade app-modal" id="employee-detail-modal" tabindex="-1" aria-labelledby="employee-detail-title" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="employee-detail-title">Employee detail</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <dl class="row mb-0">
+                  <dt class="col-4">Employee ID</dt><dd class="col-8" id="detail-code"></dd>
+                  <dt class="col-4">Email</dt><dd class="col-8" id="detail-email"></dd>
+                  <dt class="col-4">Phone</dt><dd class="col-8" id="detail-phone"></dd>
+                  <dt class="col-4">Role</dt><dd class="col-8" id="detail-role"></dd>
+                  <dt class="col-4">Status</dt><dd class="col-8" id="detail-status"></dd>
+                  <dt class="col-4">Employee type</dt><dd class="col-8" id="detail-type"></dd>
+                  <dt class="col-4">Designation</dt><dd class="col-8" id="detail-designation"></dd>
+                  <dt class="col-4">Department</dt><dd class="col-8" id="detail-department"></dd>
+                  <dt class="col-4">Date of joining</dt><dd class="col-8" id="detail-doj"></dd>
+                  <dt class="col-4">Date of exit</dt><dd class="col-8" id="detail-doe"></dd>
+                  <dt class="col-4">Basic salary</dt><dd class="col-8" id="detail-salary"></dd>
+                  <dt class="col-4">Manager</dt><dd class="col-8" id="detail-manager"></dd>
+                </dl>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="employee-detail-edit-btn"><i class="bi bi-pencil"></i> Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade app-modal" id="bulk-upload-modal" tabindex="-1" aria-labelledby="bulk-upload-modal-title" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="bulk-upload-modal-title">Bulk upload employees</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="bulk-upload-form" class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label" for="bulk-upload-file">File</label>
+                    <input type="file" id="bulk-upload-file" class="form-control" accept=".csv,.tsv,text/csv,text/tab-separated-values" required>
+                    <div class="form-text">Header row with columns: name, email, role, manager (optional — matched by an existing employee's name; "manager" isn't a role, EMPLOYEE/HR_ADMIN are the only ones).</div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="bulk-upload-form" class="btn btn-primary">Upload</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade app-modal" id="reassign-modal" tabindex="-1" aria-labelledby="reassign-modal-title" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="reassign-modal-title">Reassign team</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p class="text-body-secondary">Moves employees to a new manager — e.g. when a manager leaves. Pending leave approvals, open 1:1s, and in-progress appraisal reviews all move to the new manager. Already-finalized appraisals and completed 1:1 notes stay as-is — they're a record of what the outgoing manager actually decided, not open work to hand off.</p>
+                <form id="reassign-form" class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label" for="reassign-from">From manager</label>
+                    <select id="reassign-from" class="form-select" required>
+                      <option value="">Select a manager…</option>
+                    </select>
+                  </div>
+                  <div class="col-12" id="reassign-employees-wrap" hidden>
+                    <label class="form-label">Employees to move</label>
+                    <div id="reassign-employees"></div>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label" for="reassign-to">To manager</label>
+                    <select id="reassign-to" class="form-select" required>
+                      <option value="">Select a manager…</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="reassign-form" class="btn btn-primary">Reassign</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div id="footer-placeholder"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api/api-client.js"></script>
+  <script src="js/api/api-client-mock.js"></script>
+  <script src="js/api/api-router.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/list-filter.js"></script>
+  <script src="js/parse-delimited.js"></script>
+  <script src="js/team-roster.js"></script>
+  <script src="js/page/hr-employees.js"></script>
+</body>
+</html>

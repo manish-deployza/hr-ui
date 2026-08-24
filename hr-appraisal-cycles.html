@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en" data-auth-pending="true">
+<head>
+  <meta charset="utf-8">
+  <title>Appraisal Cycles — Employee Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div id="header-placeholder"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="sidebar col-md-3 col-lg-2 d-md-block">
+        <div id="sidebar-placeholder"></div>
+      </nav>
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-4">
+        <div class="d-flex align-items-center justify-content-between pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2 mb-0">Appraisal cycles</h1>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cycle-modal">
+            <i class="bi bi-plus-lg"></i> New cycle
+          </button>
+        </div>
+        <div id="cycles-error" class="alert alert-danger" hidden></div>
+        <div class="card mb-3">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead><tr><th>Name</th><th>Period</th><th>Self-review by</th><th>Manager review by</th><th>Status</th><th></th></tr></thead>
+              <tbody id="cycles-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- New cycle popup -->
+        <div class="modal fade app-modal" id="cycle-modal" tabindex="-1" aria-labelledby="cycle-modal-title" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="cycle-modal-title">New cycle</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="new-cycle-form">
+                  <div class="row g-3">
+                    <div class="col-sm-6">
+                      <label class="form-label" for="cycle-name">Name</label>
+                      <input type="text" id="cycle-name" class="form-control" placeholder="e.g. H2 2026" required>
+                    </div>
+                    <div class="col-sm-3">
+                      <label class="form-label" for="cycle-start">Start date</label>
+                      <input type="date" id="cycle-start" class="form-control" required>
+                    </div>
+                    <div class="col-sm-3">
+                      <label class="form-label" for="cycle-end">End date</label>
+                      <input type="date" id="cycle-end" class="form-control" required>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="cycle-self-deadline">Self-review deadline</label>
+                      <input type="date" id="cycle-self-deadline" class="form-control" required>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="cycle-manager-deadline">Manager review deadline</label>
+                      <input type="date" id="cycle-manager-deadline" class="form-control" required>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="new-cycle-form" class="btn btn-primary">Create cycle</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between pt-2 pb-2 border-bottom">
+          <h2 class="h5 mb-0">Rating scale</h2>
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#rating-modal">
+            <i class="bi bi-plus-lg"></i> Add rating value
+          </button>
+        </div>
+        <div class="card mb-3" style="max-width: 480px;">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead><tr><th>Value</th><th>Label</th></tr></thead>
+              <tbody id="rating-values-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Add rating value popup -->
+        <div class="modal fade app-modal" id="rating-modal" tabindex="-1" aria-labelledby="rating-modal-title" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="rating-modal-title">Add rating value</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="new-rating-form">
+                  <div class="row g-3">
+                    <div class="col-sm-4">
+                      <label class="form-label" for="rating-value">Value</label>
+                      <input type="number" id="rating-value" class="form-control" placeholder="Value" required>
+                    </div>
+                    <div class="col-sm-8">
+                      <label class="form-label" for="rating-label">Label</label>
+                      <input type="text" id="rating-label" class="form-control" placeholder="Label" required>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="new-rating-form" class="btn btn-primary">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div id="footer-placeholder"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api/api-client.js"></script>
+  <script src="js/api/api-client-mock.js"></script>
+  <script src="js/api/api-router.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/status-badge.js"></script>
+  <script src="js/page/hr-appraisal-cycles.js"></script>
+</body>
+</html>
