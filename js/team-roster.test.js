@@ -5,7 +5,7 @@ const employees = [
   { id: 1, name: "Jordan Lee", email: "jordan.lee@example.com", role: "EMPLOYEE", managerId: null },
   { id: 2, name: "Alex Kim", email: "alex.kim@example.com", role: "EMPLOYEE", managerId: 1 },
   { id: 3, name: "Priya Sharma", email: "priya.sharma@example.com", role: "EMPLOYEE", managerId: 1 },
-  { id: 4, name: "Sam Rivera", email: "sam.rivera@example.com", role: "HR_ADMIN", managerId: null },
+  { id: 4, name: "Sam Rivera", email: "sam.rivera@example.com", role: "HR", managerId: null },
 ];
 
 assert.deepStrictEqual(managersOf(employees).map((e) => e.id), [1], "only employees pointed at by someone's managerId count");

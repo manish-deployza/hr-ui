@@ -1,7 +1,7 @@
 // "Manager" is derived from who reports to whom (employee.managerId), not a
 // stored role — matches 06-auth-and-security.md's "is_manager would drift"
 // reasoning. Anyone currently pointed at by another employee's managerId
-// counts, even outside the HR_ADMIN/EMPLOYEE role split.
+// counts, even outside the HR/EMPLOYEE role split.
 function managersOf(employees) {
   const managerIds = new Set(employees.map((e) => e.managerId).filter((id) => id != null));
   return employees.filter((e) => managerIds.has(e.id));

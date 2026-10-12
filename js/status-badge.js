@@ -4,7 +4,7 @@
 const STATUS_BADGE_MAP = {
   APPLIED: { variant: "pending", label: "Applied" },
   PENDING_MANAGER: { variant: "pending", label: "Pending manager" },
-  PENDING_HR_ADMIN: { variant: "pending", label: "Pending HR" },
+  PENDING_HR: { variant: "pending", label: "Pending HR" },
   APPROVED: { variant: "approved", label: "Approved" },
   REJECTED: { variant: "rejected", label: "Rejected" },
   CANCELLED: { variant: "neutral", label: "Cancelled" },
@@ -17,11 +17,23 @@ const ONE_ON_ONE_STATUS_BADGE_MAP = {
   CANCELLED: { variant: "neutral", label: "Cancelled" },
 };
 
+// Per js/appraisal-status.js / 18-appraisal-enterprise-expansion.md's
+// Appraisal state machine. SELF_SUBMITTED and MANAGER_SUBMITTED from the
+// source spec are modeled as instantaneous in this app (no separate
+// "manager started reviewing" step distinct from opening the page) - see
+// mock-data.js's self-review/manager-review handlers - so they never appear
+// as a stored status and aren't listed here.
 const APPRAISAL_STATUS_BADGE_MAP = {
-  NOT_STARTED: { variant: "neutral", label: "Not started" },
-  SELF_PENDING: { variant: "pending", label: "Self-review pending" },
-  MANAGER_PENDING: { variant: "pending", label: "Manager review pending" },
+  SELF_APPRAISAL: { variant: "pending", label: "Self-appraisal" },
+  MANAGER_REVIEW: { variant: "pending", label: "Manager review" },
+  HR_REVIEW: { variant: "pending", label: "HR review" },
+  CALIBRATION: { variant: "pending", label: "Calibration" },
   FINALIZED: { variant: "approved", label: "Finalized" },
+  ACKNOWLEDGED: { variant: "approved", label: "Acknowledged" },
+  CLOSED: { variant: "approved", label: "Closed" },
+  RETURNED: { variant: "rejected", label: "Returned to manager" },
+  REOPENED: { variant: "pending", label: "Reopened" },
+  CANCELLED: { variant: "neutral", label: "Cancelled" },
 };
 
 const APPRAISAL_GOAL_STATUS_BADGE_MAP = {
@@ -51,6 +63,20 @@ function renderBadge(status, map) {
     : "Unknown";
   const entry = map[status] || { variant: "neutral", label: fallbackLabel };
   return '<span class="status-badge status-badge--' + entry.variant + '">' + esc(entry.label) + "</span>";
+}
+
+// user.status (employee-onboarding.md lifecycle).
+const EMPLOYEE_STATUS_BADGE_MAP = {
+  INVITED: { variant: "neutral", label: "Invited" },
+  PENDING: { variant: "pending", label: "Pending" },
+  ONBOARDED: { variant: "pending", label: "Onboarded" },
+  ACTIVE: { variant: "approved", label: "Active" },
+  ON_NOTICE: { variant: "pending", label: "On notice" },
+  EXITED: { variant: "rejected", label: "Exited" },
+};
+
+function renderEmployeeStatusBadge(status) {
+  return renderBadge(status, EMPLOYEE_STATUS_BADGE_MAP);
 }
 
 function renderStatusBadge(status) {

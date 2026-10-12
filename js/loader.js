@@ -3,15 +3,31 @@
  * happens on the "session-ready" event fired by auth-guard.js. */
 
 (function () {
-  function include(id, path) {
-    const target = document.getElementById(id);
-    if (!target) return Promise.resolve();
+  function fill(el, path) {
     return fetch(path)
       .then((res) => res.text())
       .then((html) => {
-        target.innerHTML = html;
+        el.innerHTML = html;
       });
   }
+
+  function include(id, path) {
+    const target = document.getElementById(id);
+    if (!target) return Promise.resolve();
+    return fill(target, path);
+  }
+
+  /* Any <div data-include="components/x.html"> is filled from that file — the
+   * same injection the header and sidebar use, opened up so a page can split
+   * a long form into step fragments instead of inlining every field (see
+   * file-organization.md Shared Components). A page script that touches
+   * injected markup must wire up inside window.FragmentsReady, mirroring
+   * window.AppConfigReady — at script-eval time those elements are empty. */
+  window.FragmentsReady = Promise.all(
+    Array.from(document.querySelectorAll("[data-include]")).map((el) =>
+      fill(el, el.getAttribute("data-include"))
+    )
+  );
 
   Promise.all([
     include("header-placeholder", "components/header.html"),
@@ -20,22 +36,64 @@
     // auth-guard.js's "session-ready" can fire before these partials finish
     // loading — if it already did, window.__session is set, so paint the
     // name immediately instead of waiting on an event that already passed.
-    if (window.__session) setUserName(window.__session);
-    document.addEventListener("session-ready", (e) => setUserName(e.detail));
+    if (window.__session) {
+      setUserName(window.__session);
+      setUserAvatar(window.__session);
+      if (typeof applySidebarLocks === "function") applySidebarLocks(window.__session);
+    }
+    document.addEventListener("session-ready", (e) => {
+      setUserName(e.detail);
+      setUserAvatar(e.detail);
+    });
 
     document.addEventListener("click", function (e) {
-      if (e.target && e.target.id === "header-signout") {
+      if (e.target && e.target.closest("#header-signout")) {
         apiClient.logout().finally(() => (window.location.href = "login.html"));
       }
     });
 
+    // Drop the iframe's src once the leave-detail modal (js/notification-bell.js
+    // opens it) closes, so its polling/timers stop instead of running hidden
+    // in the background until the next notification click reuses it.
+    const leaveModal = document.getElementById("leave-detail-modal");
+    if (leaveModal) {
+      leaveModal.addEventListener("hidden.bs.modal", function () {
+        const frame = document.getElementById("leave-detail-frame");
+        if (frame) frame.src = "about:blank";
+      });
+    }
+
     highlightActiveNavLink();
     renderBreadcrumbs();
+
+    const mockBadge = document.getElementById("header-mock-badge");
+    if (mockBadge) AppConfigReady.then(() => (mockBadge.hidden = !AppConfig.mockMode));
   });
+
+  // Same photo the profile page shows (js/api/profile.js's showProfilePhoto) —
+  // whichever page loaded the header gets the employee's actual photo instead
+  // of the generic person-circle icon, once session-ready carries hasPhoto.
+  function setUserAvatar(session) {
+    const img = document.getElementById("header-user-photo");
+    const icon = document.getElementById("header-user-icon");
+    if (!img || !icon) return;
+    const hasPhoto = session.hasPhoto === true;
+    img.hidden = !hasPhoto;
+    icon.hidden = hasPhoto;
+    img.src = hasPhoto ? window.AppConfig.apiBaseUrl + "/employees/me/photo?t=" + Date.now() : "";
+  }
 
   function setUserName(session) {
     const nameEl = document.getElementById("header-user-name");
     if (nameEl) nameEl.textContent = session.name;
+
+    const orgEl = document.getElementById("header-org-name");
+    if (orgEl) {
+      const okey = session.orgKey
+        ? '<span class="org-key">' + esc(session.orgKey) + "</span>"
+        : "";
+      orgEl.innerHTML = [okey, esc(session.organizationName)].filter(Boolean).join(" | ");
+    }
   }
 
   // Detail pages (e.g. appraisal-view.html, leave-view.html) have no sidebar
@@ -119,11 +177,11 @@
     if (!list) return;
 
     if (window.location.pathname.endsWith("/dashboard.html")) {
-      list.innerHTML = '<li class="breadcrumb-item active" aria-current="page">Dashboard</li>';
+      list.innerHTML = '<li class="breadcrumb-item active" aria-current="page">Home</li>';
       return;
     }
 
-    const crumbs = ['<li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>'];
+    const crumbs = ['<li class="breadcrumb-item"><a href="dashboard.html">Home</a></li>'];
     const match = findRelevantNavLink();
 
     if (match) {

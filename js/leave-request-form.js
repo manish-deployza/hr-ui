@@ -5,21 +5,12 @@
  * source of truth and re-validates all of it.
  *
  * Deliberately NOT modeled here (out of scope for a first application):
- * - PREGNANCY_ILLNESS_EXTENSION — applied on top of an existing approved
- *   maternity request (parent_request_id), not a fresh application.
- * - The miscarriage-during-active-maternity force-transition — a server/HR
- *   action on an existing request, not something this form initiates.
  * - LOP's 15-working-days/year cap — needs "LOP already taken this year",
  *   which isn't in the balances payload this form has; only the CL/PL
- *   exhaustion gate is checked here. */
-
-const MATERNITY_SITUATIONS = [
-  { value: "UP_TO_2_CHILDREN", label: "Up to 2 children — 26 weeks", weeks: 26 },
-  { value: "2_OR_MORE_CHILDREN", label: "2 or more children — 12 weeks", weeks: 12 },
-  { value: "ADOPTION_UNDER_3MO", label: "Adoption, under 3 months — 12 weeks", weeks: 12 },
-  { value: "COMMISSIONING_MOTHER", label: "Commissioning mother — 12 weeks", weeks: 12 },
-  { value: "MISCARRIAGE", label: "Miscarriage — 6 weeks", weeks: 6 },
-];
+ *   exhaustion gate is checked here.
+ * The maternity situation-type sub-classification (situationType /
+ * requiresSituationType / SituationType) has been dropped server-side
+ * entirely — no column backs it, so it is not modeled here at all. */
 
 function initLeaveRequestForm(container, leaveTypes, balances, onSubmit) {
   container.innerHTML =
@@ -43,25 +34,13 @@ function initLeaveRequestForm(container, leaveTypes, balances, onSubmit) {
     '<input type="date" id="lrf-end" class="form-control" required>' +
     '<div class="invalid-feedback">Please choose an end date.</div>' +
     "</div>" +
-    '<div class="col-sm-6" id="lrf-situation-wrap" hidden>' +
-    '<label class="form-label" for="lrf-situation">Situation type</label>' +
-    '<select id="lrf-situation" class="form-select" required>' +
-    MATERNITY_SITUATIONS.map((s) => '<option value="' + s.value + '">' + esc(s.label) + "</option>").join("") +
-    "</select>" +
-    "</div>" +
-    '<div class="col-sm-6" id="lrf-delivery-wrap" hidden>' +
-    '<label class="form-label" for="lrf-delivery-date">Expected delivery date</label>' +
-    '<input type="date" id="lrf-delivery-date" class="form-control" required>' +
-    "</div>" +
-    '<div class="col-12">' +
-    '<div id="lrf-delivery-warning" class="alert alert-warning" hidden></div>' +
-    "</div>" +
     '<div class="col-12">' +
     '<label class="form-label" for="lrf-reason">Reason</label>' +
     '<textarea id="lrf-reason" class="form-control" rows="3"></textarea>' +
     "</div>" +
     '<div class="col-12">' +
     '<div id="lrf-notice-warning" class="alert alert-warning" hidden></div>' +
+    '<div id="lrf-overflow-warning" class="alert alert-warning" hidden></div>' +
     '<div id="lrf-lop-warning" class="alert alert-danger" hidden></div>' +
     "</div>" +
     "</div>" +
@@ -69,12 +48,10 @@ function initLeaveRequestForm(container, leaveTypes, balances, onSubmit) {
     '<button class="w-100 btn btn-primary btn-lg" type="submit">Submit request</button>';
 
   const typeSelect = container.querySelector("#lrf-type");
-  const situationWrap = container.querySelector("#lrf-situation-wrap");
-  const deliveryWrap = container.querySelector("#lrf-delivery-wrap");
-  const deliveryWarning = container.querySelector("#lrf-delivery-warning");
   const startInput = container.querySelector("#lrf-start");
-  const deliveryInput = container.querySelector("#lrf-delivery-date");
+  const endInput = container.querySelector("#lrf-end");
   const noticeWarning = container.querySelector("#lrf-notice-warning");
+  const overflowWarning = container.querySelector("#lrf-overflow-warning");
   const lopWarning = container.querySelector("#lrf-lop-warning");
   const typeInfo = container.querySelector("#lrf-type-info");
   const submitBtn = container.querySelector('button[type="submit"]');
@@ -90,28 +67,31 @@ function initLeaveRequestForm(container, leaveTypes, balances, onSubmit) {
 
   function updateConditionalFields() {
     const type = selectedType();
-    situationWrap.hidden = !(type && type.requiresSituationType);
-    deliveryWrap.hidden = !(type && type.requiresSituationType);
     typeInfo.textContent = (type && type.infoNote) || "";
     checkNoticePeriod(type);
-    checkDeliveryWindow();
     checkLopEligibility(type);
+    checkBalanceOverflow(type);
   }
 
-  // "Max 8 weeks of the 26-week entitlement may fall before the expected
-  // delivery date" (03-leave-policy-engine.md) — mirrored as a general
-  // start-date-vs-delivery-date check for any maternity request.
-  function checkDeliveryWindow() {
-    if (deliveryWrap.hidden || !startInput.value || !deliveryInput.value) {
-      deliveryWarning.hidden = true;
+  /* UX preview only — an approximate calendar-day count (server computes the
+   * real numDays, e.g. excluding weekends/holidays). Any requested days beyond
+   * the selected type's balance can't be granted as that type, so they'd be
+   * recorded as LOP (unpaid) for the calendar year instead of blocking submit. */
+  function checkBalanceOverflow(type) {
+    if (!type || type.code === "LOP" || !startInput.value || !endInput.value) {
+      overflowWarning.hidden = true;
       return;
     }
-    const daysBeforeDelivery = Math.floor((new Date(deliveryInput.value) - new Date(startInput.value)) / 86400000);
-    if (daysBeforeDelivery > 56) {
-      deliveryWarning.hidden = false;
-      deliveryWarning.textContent = "At most 8 weeks of maternity leave may start before the expected delivery date.";
+    const requested = Math.floor((new Date(endInput.value) - new Date(startInput.value)) / 86400000) + 1;
+    const balance = balanceFor(type.code);
+    const overflow = requested - balance;
+    if (requested > 0 && overflow > 0) {
+      overflowWarning.hidden = false;
+      overflowWarning.textContent =
+        Math.max(balance, 0) + " of " + requested + " requested day(s) are covered by your " + esc(type.name) +
+        " balance. The remaining " + overflow + " day(s) will be recorded as Loss of Pay (unpaid leave) for this calendar year.";
     } else {
-      deliveryWarning.hidden = true;
+      overflowWarning.hidden = true;
     }
   }
 
@@ -145,7 +125,7 @@ function initLeaveRequestForm(container, leaveTypes, balances, onSubmit) {
 
   typeSelect.addEventListener("change", updateConditionalFields);
   startInput.addEventListener("change", updateConditionalFields);
-  deliveryInput.addEventListener("change", checkDeliveryWindow);
+  endInput.addEventListener("change", updateConditionalFields);
   updateConditionalFields();
 
   container.closest("form").addEventListener("submit", function (e) {
@@ -161,8 +141,6 @@ function initLeaveRequestForm(container, leaveTypes, balances, onSubmit) {
       leaveTypeId: type.id,
       startDate: startInput.value,
       endDate: container.querySelector("#lrf-end").value,
-      situationType: type.requiresSituationType ? container.querySelector("#lrf-situation").value : undefined,
-      expectedDeliveryDate: type.requiresSituationType ? deliveryInput.value : undefined,
       reason: normalizeText(container.querySelector("#lrf-reason").value),
     });
   });
