@@ -1,0 +1,207 @@
+<!-- Employee detail fields (employee-onboarding.md). One fragment, three
+     sections, shared by onboarding.html (one section per wizard step,
+     mandatory fields enforced) and the HR/admin details editor in
+     hr-employees.html (all sections, every field optional / PATCH).
+     Field `name`s are the backend's JSON keys. `data-req` marks the fields
+     the onboarding submit requires; js/emp-details-fields.js turns that
+     into `required` only where wanted. autocomplete="off" on the pay/ID
+     block: an admin may be typing these for someone else. -->
+<div data-section="personal">
+  <div class="row g-3">
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-phone">Phone</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+        <input type="tel" id="ed-phone" name="phone" data-req class="form-control" maxlength="20" pattern="[0-9+ \(\)\-]{7,20}" autocomplete="tel">
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-dob">Date of birth</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-cake2"></i></span>
+        <input type="date" id="ed-dob" name="dateOfBirth" data-req class="form-control" min="1900-01-01" autocomplete="bday">
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-gender">Gender</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person-vcard"></i></span>
+        <select id="ed-gender" name="gender" data-req class="form-select">
+          <option value="">Select…</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Non-binary">Non-binary</option>
+          <option value="Prefer not to say">Prefer not to say</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-nationality">Nationality</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-globe"></i></span>
+        <select id="ed-nationality" name="nationality" data-req class="form-select" data-countries>
+          <option value="">Select…</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-marital">Marital status</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-people"></i></span>
+        <input type="text" id="ed-marital" name="maritalStatus" data-req class="form-control" maxlength="40" list="ed-marital-options">
+      </div>
+      <datalist id="ed-marital-options">
+        <option value="Single"></option>
+        <option value="Married"></option>
+        <option value="Partnered"></option>
+        <option value="Prefer not to say"></option>
+      </datalist>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-blood">Blood group <span class="text-body-secondary small">(optional)</span></label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-droplet"></i></span>
+        <select id="ed-blood" name="bloodGroup" class="form-select">
+          <option value="">Not stated</option>
+          <option value="A+">A+</option>
+          <option value="A-">A−</option>
+          <option value="B+">B+</option>
+          <option value="B-">B−</option>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB−</option>
+          <option value="O+">O+</option>
+          <option value="O-">O−</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-12">
+      <label class="form-label" for="ed-personal-email">Personal email</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-envelope-at"></i></span>
+        <input type="email" id="ed-personal-email" name="personalEmail" data-req class="form-control" maxlength="190" autocomplete="email">
+      </div>
+      <div class="form-text">Used only if your work email is unreachable. Never your sign-in identity.</div>
+    </div>
+
+    <div class="col-12"><h3 class="h6 mb-0 mt-2">Home address</h3></div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-address1">Address line 1</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-signpost"></i></span>
+        <input type="text" id="ed-address1" name="address1" data-req class="form-control" maxlength="150" autocomplete="address-line1">
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-address2">Address line 2 <span class="text-body-secondary small">(optional)</span></label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-building"></i></span>
+        <input type="text" id="ed-address2" name="address2" class="form-control" maxlength="150" autocomplete="address-line2">
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-landmark">Landmark <span class="text-body-secondary small">(optional)</span></label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-pin-map"></i></span>
+        <input type="text" id="ed-landmark" name="landmark" class="form-control" maxlength="150">
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-country">Country</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-flag"></i></span>
+        <select id="ed-country" name="country" data-req class="form-select" data-countries autocomplete="country">
+          <option value="">Select…</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <label class="form-label" for="ed-city">City</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-buildings"></i></span>
+        <input type="text" id="ed-city" name="city" data-req class="form-control" maxlength="100" autocomplete="address-level2">
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <label class="form-label" for="ed-state">State / region</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-map"></i></span>
+        <input type="text" id="ed-state" name="state" data-req class="form-control" maxlength="100" autocomplete="address-level1">
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <label class="form-label" for="ed-postal">Postal / ZIP code</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-mailbox"></i></span>
+        <input type="text" id="ed-postal" name="postalCode" data-req class="form-control" maxlength="20" pattern="[A-Za-z0-9 \-]{3,20}" autocomplete="postal-code">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-section="emergency">
+  <div class="row g-3">
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-emg-name">Contact name</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person-heart"></i></span>
+        <input type="text" id="ed-emg-name" name="emergencyName" data-req class="form-control" maxlength="128">
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-emg-rel">Relationship</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-diagram-3"></i></span>
+        <input type="text" id="ed-emg-rel" name="emergencyRelationship" data-req class="form-control" maxlength="50" placeholder="e.g. Spouse">
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-emg-phone">Contact phone</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-telephone-plus"></i></span>
+        <input type="tel" id="ed-emg-phone" name="emergencyPhone" data-req class="form-control" maxlength="20" pattern="[0-9+ \(\)\-]{7,20}">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-section="payIds">
+  <div class="row g-3">
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-bank-account">Bank account number</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-bank"></i></span>
+        <input type="text" id="ed-bank-account" name="bankAccount" data-req class="form-control" maxlength="34" pattern="[A-Za-z0-9]{5,34}" autocomplete="off">
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-bank-ifsc">IFSC code</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-upc"></i></span>
+        <input type="text" id="ed-bank-ifsc" name="bankIfsc" data-req class="form-control text-uppercase" maxlength="11" pattern="[A-Za-z]{4}0[A-Za-z0-9]{6}" placeholder="HDFC0001234" autocomplete="off">
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-national-id">Government ID</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person-badge-fill"></i></span>
+        <input type="text" id="ed-national-id" name="nationalId" data-req class="form-control" maxlength="30" pattern="[A-Za-z0-9 \/\-]{4,30}" autocomplete="off">
+      </div>
+      <div class="form-text">Aadhaar, SSN, national ID — whichever applies.</div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-tax-id">Tax ID</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-receipt"></i></span>
+        <input type="text" id="ed-tax-id" name="taxId" data-req class="form-control" maxlength="30" pattern="[A-Za-z0-9 \/\-]{4,30}" autocomplete="off">
+      </div>
+      <div class="form-text">PAN or equivalent.</div>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label" for="ed-passport">Passport number <span class="text-body-secondary small">(optional)</span></label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-passport"></i></span>
+        <input type="text" id="ed-passport" name="passport" class="form-control" maxlength="30" pattern="[A-Za-z0-9 \/\-]{4,30}" autocomplete="off">
+      </div>
+    </div>
+  </div>
+</div>
