@@ -9,25 +9,24 @@ Screens, navigation, and the leave-request lifecycle for the static multi-page s
 | `login.html` | public | Email + password. On success, backend sets the HttpOnly JWT cookie; page redirects to `dashboard.html` (or `change-password.html` if forced). |
 | `change-password.html` | any, forced when `force_password_reset` | Blocks access to every other page (via `auth-guard.js`) until the password is changed. |
 | `dashboard.html` | Employee | Balance summary cards (`leave-balance-card.js` × N) + recent request status list. |
-| `leave-apply.html` | Employee | The leave application form (`leave-request-form.js`) — fields adapt per selected leave type (`situationType` only for Maternity), notice-period warning mirrored client-side. |
+| `leave-apply.html` | Employee | The leave application form (`leave-request-form.js`) — notice-period, balance-overflow, and LOP-eligibility warnings mirrored client-side per selected leave type. |
 | `leave-history.html` | Employee | Own past/pending requests, list view with `status-badge.js` per row, links to `leave-view.html?id=`. |
 | `leave-view.html?id=<id>` | Employee (own), Manager (if a direct report's), HR | Request detail + `approval-timeline.js`. Manager/HR approve/reject actions render here when the viewer is the current step's approver. No HR-override control yet (see `discussion.md` open items). |
 | `profile.html` | Employee | Own profile, read-only except contact details (`employeeCode`/name/email/role) plus phone (+91, 10-digit) and address. |
-| `manager-team-requests.html` | Manager (nav item shown only if `isManager`) | Approval queue for direct reports — links into `leave-view.html?id=`. |
-| `manager-team.html` | Manager | List of direct reports + balances at a glance. |
-| `hr-requests.html` | HR_ADMIN | Company-wide request queue, read-only list linking into `leave-view.html?id=`. |
-| `hr-employees.html` | HR_ADMIN | Employee directory — **read-only list for now**; CRUD/impose-LOP controls not yet built (`createHrEmployee`/`updateHrEmployee`/`imposeLop` client methods exist, unused). |
-| `hr-leave-types.html` | HR_ADMIN | Leave type catalog — name/code/entitlement/advance-notice/situation-flag/notes. Read-only; no approval-chain editor yet. |
-| `hr-holidays.html` | HR_ADMIN | Public holiday calendar — **read-only**, split into "National (non-negotiable)" and "Other compulsory" tables. No create/delete UI yet. |
-| `hr-lop-watchlist.html` | HR_ADMIN | Employees flagged by `LopReturnCheckJob`. |
-| `hr-exit.html?employeeId=<id>` | HR_ADMIN | Exit settlement review (DRAFT) → finalize. **Not yet built** — `hrExit()`/`finalizeExit()` client methods exist and are wired, no page or sidebar link. |
-| `hr-audit-log.html` | HR_ADMIN | Searchable audit trail. |
+| `manager-team-requests.html` | Manager (nav item shown only if `isManager`) | Direct reports roster + balances at a glance, plus the approval queue for their leave requests — links into `leave-view.html?id=`. |
+| `hr-requests.html` | HR | Company-wide request queue, read-only list linking into `leave-view.html?id=`. |
+| `hr-employees.html` | HR | Employee directory — **read-only list for now**; CRUD/impose-LOP controls not yet built (`createHrEmployee`/`updateHrEmployee`/`imposeLop` client methods exist, unused). |
+| `hr-leave-types.html` | HR | Leave type catalog — name/code/entitlement/advance-notice/notes. Read-only; no approval-chain editor yet. |
+| `hr-holidays.html` | HR | Public holiday calendar — **read-only**, split into "National (non-negotiable)" and "Other compulsory" tables. No create/delete UI yet. |
+| `hr-lop-watchlist.html` | HR | Employees flagged by `LopReturnCheckJob`. |
+| `hr-exit.html?employeeId=<id>` | HR | Exit settlement review (DRAFT) → finalize. **Not yet built** — `hrExit()`/`finalizeExit()` client methods exist and are wired, no page or sidebar link. |
+| `hr-audit-log.html` | HR | Searchable audit trail. |
 | `one-on-ones.html` | Employee, Manager | Own upcoming/past 1:1 sessions (both parties see the same list). |
 | `one-on-one-view.html?id=<id>` | Employee, Manager | Shared agenda (either party edits), manager-only private notes (gated by `managerId === viewer.id`, not role), action items, complete/cancel. |
 | `appraisals.html` | Employee | Own appraisal history across cycles. |
 | `appraisal-view.html?id=<id>` | Employee (self-review), Manager (manager-review, revealed once self-review is submitted) | Rating + comments per step, goals list. |
 | `manager-appraisals.html` | Manager | Team's reviews for the open cycle — links into `appraisal-view.html?id=`. |
-| `hr-appraisal-cycles.html` | HR_ADMIN | Cycle config (create/open/close) + rating-scale editor. |
+| `hr-appraisal-cycles.html` | HR | Cycle config (create/open/close) + rating-scale editor. |
 
 ## Shell & navigation
 
@@ -42,10 +41,10 @@ Sidebar
 ├── Appraisals             (all)
 ├── Profile                (all)
 ├── My Team                (intended: isManager only)
-│   ├── Team Requests
-│   ├── Team Overview
+│   ├── Team               (roster + requests)
+│   ├── Team One-on-Ones
 │   └── Team Appraisals
-└── HR Admin                (intended: role == HR_ADMIN only)
+└── HR Admin                (intended: role == HR only)
     ├── Requests
     ├── Employees
     ├── Leave Types
@@ -76,8 +75,7 @@ dashboard.html ──▶ leave-apply.html ──submit──▶ leave-history.ht
 ## Manager flow (adds, on top of the employee flow above)
 
 ```
-manager-team-requests.html ──▶ leave-view.html?id=<id> ──approve/reject──▶ back to queue
-manager-team.html  (read-only roster + balances)
+manager-team-requests.html (roster + balances, then requests) ──▶ leave-view.html?id=<id> ──approve/reject──▶ back to queue
 ```
 
 ## HR flow (adds, on top of the employee flow above)
@@ -101,23 +99,37 @@ one-on-ones.html (own upcoming/past sessions) ──▶ one-on-one-view.html?id=
                                     complete / cancel (either party, while SCHEDULED)
 ```
 
-## Appraisal flow (per `17-module-appraisal.md`)
+## Appraisal flow (per `17-module-appraisal.md`, extended by `Prompts/18-appraisal-enterprise-expansion.md`)
+
+Cycle-level status (`DRAFT`/`OPEN`/`CLOSED`) and per-review status (below) are
+separate fields - see `js/appraisal-status.js`.
 
 ```
 appraisals.html (employee's own cycles) ──▶ appraisal-view.html?id=<id>
                                                  │
-                                     NOT_STARTED ──▶ SELF_PENDING
-                                                        │ employee submits self-review
-                                                        ▼
-                                                 MANAGER_PENDING (manager section now revealed)
-                                                        │ manager submits manager-review
-                                                        ▼
-                                                    FINALIZED
+                                          SELF_APPRAISAL
+                                                 │ employee submits self-review
+                                                 ▼
+                                          MANAGER_REVIEW (manager section now revealed)
+                                                 │ manager submits manager-review
+                                                 ▼
+                                            HR_REVIEW ──return (reason req'd)──▶ RETURNED ──manager re-submits──┐
+                                                 │ HR: Calibrate                                                 │
+                                                 ▼                                                               │
+                                           CALIBRATION ◀─────────────────────────────────────────────────────────┘
+                                                 │ HR: Finalize
+                                                 ▼
+                                            FINALIZED ──employee: Acknowledge──▶ ACKNOWLEDGED ──cycle closed──▶ CLOSED
+                                                 │
+                                                 └──HR: Reopen (from FINALIZED/ACKNOWLEDGED/CLOSED)──▶ REOPENED ──HR: Re-finalize──▶ FINALIZED
+
+CANCELLED - HR, from any non-terminal status above (terminal, no further transitions)
+```
 
 manager-appraisals.html (team queue, open cycle) ──▶ appraisal-view.html?id=<id>
 hr-appraisal-cycles.html ──▶ create cycle (DRAFT) ──open──▶ OPEN ──close──▶ CLOSED
                           ──▶ rating-scale editor (value/label pairs)
-```
+                          ──▶ roster popup: per-row Calibrate/Return/Finalize/Reopen/Cancel actions
 
 ## Leave request lifecycle (drives `status-badge.js` and `approval-timeline.js`)
 
@@ -130,7 +142,7 @@ APPLIED ──▶ PENDING_MANAGER ──reject──▶ REJECTED
         (next step configured? e.g. Sabbatical/Maternity/Paternity/Marriage-edge/Exit)
                │yes                              │no (e.g. CL/PL)
                ▼                                  │
-        PENDING_HR_ADMIN ──reject──▶ REJECTED     │
+        PENDING_HR ──reject──▶ REJECTED     │
                │approve                           │
                └──────────────┬────────────────────┘
                                ▼
@@ -140,13 +152,13 @@ APPLIED ──▶ PENDING_MANAGER ──reject──▶ REJECTED
                                ▼
                             LAPSED
 
-Cancel: allowed from APPLIED / PENDING_MANAGER / PENDING_HR_ADMIN only ──▶ CANCELLED
+Cancel: allowed from APPLIED / PENDING_MANAGER / PENDING_HR only ──▶ CANCELLED
 ```
 
-- **`status-badge.js` label/color mapping** (using the §4 palette from `discussion.md`): `APPLIED`/`PENDING_MANAGER`/`PENDING_HR_ADMIN` → warning amber; `APPROVED` → success green; `REJECTED` → danger red; `CANCELLED` → neutral gray; `LAPSED` → neutral gray with a distinct icon (color is never the only signal, per the accessibility rule).
+- **`status-badge.js` label/color mapping** (using the §4 palette from `discussion.md`): `APPLIED`/`PENDING_MANAGER`/`PENDING_HR` → warning amber; `APPROVED` → success green; `REJECTED` → danger red; `CANCELLED` → neutral gray; `LAPSED` → neutral gray with a distinct icon (color is never the only signal, per the accessibility rule).
 - **`approval-timeline.js`** renders one step per row the API returns (1 row for CL/PL, 2 for Sabbatical/Maternity/Paternity/Marriage-edge/Exit) — pending/approved/rejected per step, generic enough that adding a leave type with a different chain length needs no frontend change.
 - **HR-imposed LOP**: intended design — not created via `leave-apply.html`, but directly at `APPROVED` from `hr-employees.html` (no approval steps rendered, since none exist for this path). **Not yet built**: `imposeLop()` client method exists, no UI control calls it.
-- **HR override/dispute**: intended design — not a distinct page, a direct status-change action available to HR_ADMIN from `leave-view.html?id=` when viewing any request, logged server-side to `hr-audit-log.html`. **Not yet built**: `overrideLeaveRequest()` client method exists, no UI control calls it.
+- **HR override/dispute**: intended design — not a distinct page, a direct status-change action available to HR from `leave-view.html?id=` when viewing any request, logged server-side to `hr-audit-log.html`. **Not yet built**: `overrideLeaveRequest()` client method exists, no UI control calls it.
 
 ## What each page's write actions map to
 

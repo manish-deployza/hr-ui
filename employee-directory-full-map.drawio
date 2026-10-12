@@ -1,0 +1,208 @@
+<mxfile host="65bd71144e">
+    <diagram name="Page-1" id="lvJJj83CWR6g2QX7gCTw">
+        <mxGraphModel dx="1538" dy="1180" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Employee Directory — Full Map (Frontend ↔ Backend Integration)" style="text;html=1;fontSize=20;fontStyle=1;align=left;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="16" width="900" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Browser&lt;br&gt;(signed in as ORG_ADMIN)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="80" width="160" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Frontend&lt;br&gt;Jetty :8080 — fronted/&lt;br&gt;static HTML/CSS/JS, no build step" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="80" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Backend API&lt;br&gt;Spring :8082 — /api/**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="80" width="200" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Database" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="860" y="80" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="loads pages&#xa;GET /*.html, /js/*, /css/*" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;endArrow=block;" parent="1" source="3" target="4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="fetch() credentials:&#39;include&#39;&#xa;Cookie: session_token=&lt;JWT&gt;" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;endArrow=block;exitY=0.15;entryY=0.15;" parent="1" source="3" target="5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="JPA / SQL" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=10;endArrow=block;" parent="1" source="5" target="6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="POST /api/auth/login&#xa;{orgUsername, email, password}&#xa;→ backend sets HttpOnly session_token cookie&#xa;(JWT: sub, organizationId, role, exp — 1h TTL)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#666666;dashed=1;fontSize=10;align=left;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="170" width="300" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="80" width="20" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="Base tier (P0/P1) — visible to anyone who can see the row" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1088" y="78" width="420" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="108" width="20" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="Sensitive tier (P2–P4) — returned only to an ORG_ADMIN" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1088" y="106" width="420" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="138" width="20" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="Bug found &amp; fixed this session" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1088" y="136" width="420" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="* = required (conditionally, for Address)" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="1060" y="164" width="420" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="Add / Edit Employee modal — 9-step wizard (directory.html, js/api/directory.js)" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="232" width="700" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="1. Identity" style="swimlane;whiteSpace=wrap;html=1;startSize=26;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="260" width="170" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="employeeCode&lt;br&gt;name *&lt;br&gt;preferredName&lt;br&gt;email *&lt;br&gt;phone" style="text;html=1;align=left;verticalAlign=top;fontSize=11;spacing=4;" parent="19" vertex="1">
+                    <mxGeometry x="6" y="4" width="158" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="2. Employment" style="swimlane;whiteSpace=wrap;html=1;startSize=26;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="260" width="170" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="designation&lt;br&gt;department&lt;br&gt;employeeType&lt;br&gt;dateOfJoining&lt;br&gt;managerId" style="text;html=1;align=left;verticalAlign=top;fontSize=11;spacing=4;" parent="21" vertex="1">
+                    <mxGeometry x="6" y="4" width="158" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="3. Org details" style="swimlane;whiteSpace=wrap;html=1;startSize=26;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="260" width="170" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="workLocation&lt;br&gt;gradeBand&lt;br&gt;costCenter&lt;br&gt;shiftTimezone&lt;br&gt;probationEndDate" style="text;html=1;align=left;verticalAlign=top;fontSize=11;spacing=4;" parent="23" vertex="1">
+                    <mxGeometry x="6" y="4" width="158" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="4. Personal" style="swimlane;whiteSpace=wrap;html=1;startSize=26;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="610" y="260" width="170" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="dateOfBirth&lt;br&gt;gender&lt;br&gt;pronouns&lt;br&gt;nationality&lt;br&gt;maritalStatus&lt;br&gt;bloodGroup&lt;br&gt;personalEmail&lt;br&gt;languages&lt;br&gt;hobbies" style="text;html=1;align=left;verticalAlign=top;fontSize=10;spacing=4;" parent="25" vertex="1">
+                    <mxGeometry x="6" y="4" width="158" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="5. Address" style="swimlane;whiteSpace=wrap;html=1;startSize=26;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="260" width="170" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="flatNo&lt;br&gt;address1 *&lt;br&gt;address2&lt;br&gt;landmark&lt;br&gt;country *&lt;br&gt;city *&lt;br&gt;state&lt;br&gt;postalCode&lt;br&gt;emergency ×3" style="text;html=1;align=left;verticalAlign=top;fontSize=10;spacing=4;" parent="27" vertex="1">
+                    <mxGeometry x="6" y="4" width="158" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="6. Pay &amp; IDs" style="swimlane;whiteSpace=wrap;html=1;startSize=26;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="990" y="260" width="170" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="basicSalary&lt;br&gt;bankAccount 🔒&lt;br&gt;bankIfsc&lt;br&gt;nationalId 🔒&lt;br&gt;taxId 🔒&lt;br&gt;passport 🔒&lt;br&gt;visaStatus&lt;br&gt;🔒 = always masked" style="text;html=1;align=left;verticalAlign=top;fontSize=10;spacing=4;" parent="29" vertex="1">
+                    <mxGeometry x="6" y="4" width="158" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="7. Growth" style="swimlane;whiteSpace=wrap;html=1;startSize=26;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1180" y="260" width="170" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="skills&lt;br&gt;certifications&lt;br&gt;training&lt;br&gt;mentorId&lt;br&gt;education&lt;br&gt;previousEmployer&lt;br&gt;badgeNumber&lt;br&gt;assetIds&lt;br&gt;licenses" style="text;html=1;align=left;verticalAlign=top;fontSize=10;spacing=4;" parent="31" vertex="1">
+                    <mxGeometry x="6" y="4" width="158" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="8. Profile" style="swimlane;whiteSpace=wrap;html=1;startSize=26;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1370" y="260" width="170" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="linkedIn&lt;br&gt;bio" style="text;html=1;align=left;verticalAlign=top;fontSize=11;spacing=4;" parent="33" vertex="1">
+                    <mxGeometry x="6" y="4" width="158" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="9. Voluntary" style="swimlane;whiteSpace=wrap;html=1;startSize=26;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1560" y="260" width="170" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="ethnicity&lt;br&gt;veteranStatus&lt;br&gt;disabilityStatus&lt;br&gt;religion&lt;br&gt;unionMembership&lt;br&gt;healthNotes" style="text;html=1;align=left;verticalAlign=top;fontSize=11;spacing=4;" parent="35" vertex="1">
+                    <mxGeometry x="6" y="4" width="158" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" style="edgeStyle=none;html=1;endArrow=block;strokeColor=#666666;" parent="1" source="19" target="21" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" style="edgeStyle=none;html=1;endArrow=block;strokeColor=#666666;" parent="1" source="21" target="23" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" style="edgeStyle=none;html=1;endArrow=block;strokeColor=#666666;" parent="1" source="23" target="25" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" style="edgeStyle=none;html=1;endArrow=block;strokeColor=#666666;" parent="1" source="25" target="27" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" style="edgeStyle=none;html=1;endArrow=block;strokeColor=#666666;" parent="1" source="27" target="29" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" style="edgeStyle=none;html=1;endArrow=block;strokeColor=#666666;" parent="1" source="29" target="31" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" style="edgeStyle=none;html=1;endArrow=block;strokeColor=#666666;" parent="1" source="31" target="33" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" style="edgeStyle=none;html=1;endArrow=block;strokeColor=#666666;" parent="1" source="33" target="35" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="FIXED — stepper ticks&#xa;A step ticks only once its own fields&#xa;are valid AND non-empty. An all-optional&#xa;step no longer ticks itself before&#xa;anything is typed into it." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;fontSize=10;align=left;spacing=6;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="450" width="220" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" style="edgeStyle=none;html=1;dashed=1;endArrow=none;strokeColor=#d6b656;" parent="1" source="45" target="19" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="FIXED — per-step Save&#xa;Submit used to re-validate ALL 9 steps&#xa;before saving anything. A stale problem&#xa;on an untouched step silently blocked&#xa;every save. Now only the step you&#39;re&#xa;on gates Save." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;fontSize=10;align=left;spacing=6;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="450" width="220" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" style="edgeStyle=none;html=1;dashed=1;endArrow=none;strokeColor=#d6b656;" parent="1" source="47" target="21" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="FIXED — Landmark disappearing&#xa;Was hidden purely by selected country.&#xa;Now only auto-hides while genuinely&#xa;empty — typed text no longer vanishes&#xa;when the country changes." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;fontSize=10;align=left;spacing=6;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="450" width="220" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" style="edgeStyle=none;html=1;dashed=1;endArrow=none;strokeColor=#d6b656;" parent="1" source="49" target="27" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="FIXED — masked-field corruption&#xa;bankAccount/nationalId/taxId/passport&#xa;always come back masked (&#39;•••• 1234&#39;),&#xa;even to ORG_ADMIN. Edit form now shows&#xa;the mask as a placeholder only; blank&#xa;→ omitted from PATCH (never overwrites&#xa;the real value)." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;fontSize=10;align=left;spacing=6;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="760" y="450" width="240" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" style="edgeStyle=none;html=1;dashed=1;endArrow=none;strokeColor=#d6b656;" parent="1" source="51" target="29" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="FIXED — mentor → mentorId&#xa;Frontend sent/read field name &#39;mentor&#39;;&#xa;the backend&#39;s field is &#39;mentorId&#39;. Renamed&#xa;in dir-growth.html, directory.js,&#xa;directory-scope.js (+ test), mock-data.js.&#xa;Confirmed live: mentor:2 was a silent&#xa;no-op; mentorId:2 persists correctly." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;fontSize=10;align=left;spacing=6;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="1020" y="450" width="240" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" style="edgeStyle=none;html=1;dashed=1;endArrow=none;strokeColor=#d6b656;" parent="1" source="53" target="31" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="POLISH — every dropdown&#xa;One shared .form-select rule in&#xa;css/styles.css (all &lt;select&gt; app-wide&#xa;use it): app-toned chevron, hover state,&#xa;disabled state, muted placeholder&#xa;options, radius token." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;fontSize=10;align=left;spacing=6;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="1280" y="450" width="220" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="Verified against the live backend (curl, cookie-authenticated as ORG_ADMIN)" style="text;html=1;fontSize=13;fontStyle=1;align=left;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="600" width="700" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="Endpoint" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="630" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="Verified result" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontStyle=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="630" width="560" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="GET /api/directory" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=left;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="660" width="260" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="200 — returns the real employee list (was 500)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="660" width="560" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="POST /api/directory" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=left;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="694" width="260" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="200 — creates the employee, returns {id}" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="694" width="560" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="PATCH /api/directory/{id}" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=left;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="728" width="260" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="200 — updates the employee (was 405, then 500, before the backend fix)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="728" width="560" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="DELETE /api/directory/{id}" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;fontSize=11;align=left;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="762" width="260" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="200 — deletes the employee" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;align=left;spacing=6;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="762" width="560" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="End-to-end verified: create → fill all 9 steps → mid-wizard partial update (masked fields survive, mentorId round-trips) → appears in list GET → delete. No test data left behind." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=left;spacing=8;verticalAlign=middle;" parent="1" vertex="1">
+                    <mxGeometry x="900" y="660" width="700" height="136" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

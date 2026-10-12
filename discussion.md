@@ -67,7 +67,7 @@ React components become either an injected HTML partial (header/footer/sidebar, 
 
 | `08-frontend-design.md` component | Static-site equivalent |
 |---|---|
-| `LeaveRequestForm` | `js/leave-request-form.js` — renders the form, shows/hides `situationType` and the notice-period warning based on the selected leave type, same client-side check mirrored from the server so the user sees a problem before submitting |
+| `LeaveRequestForm` | `js/leave-request-form.js` — renders the form, shows the notice-period/balance-overflow/LOP-eligibility warnings based on the selected leave type, same client-side checks mirrored from the server so the user sees a problem before submitting |
 | `LeaveBalanceCard` | `js/leave-balance-card.js` — renders one card per leave type from `GET /api/leave-balances/me`, no client-side computation |
 | `ApprovalTimeline` | `js/approval-timeline.js` — renders whatever ordered approval steps the API returns as a step tracker; same function serves 1-step and 2-step chains |
 | `NotificationBell` | `js/notification-bell.js` — polls `GET /api/notifications/me?unread=true` every 60s and on page load (no true "route change" without a router) |
@@ -76,7 +76,7 @@ React components become either an injected HTML partial (header/footer/sidebar, 
 
 ## 8. Server-state and forms: direct `apiClient` calls, no library
 
-**Decision**: no React Query/SWR/React Hook Form (all moot without React). Reuse the reference stack's pattern instead: a shared `js/api/api-client.js` (real) and `js/api/api-client-mock.js` (mock) with identical method signatures, switched by `js/api/api-router.js` based on a `config/ui-config.json` `api.mode: "mock"|"real"` flag. Every page script calls only `apiClient.*`, never `fetch()` directly. Forms are plain vanilla JS — read values on submit, show/hide conditional fields (e.g. `situationType`) with plain DOM show/hide, validate client-side as a UX mirror of the server check (never the source of truth).
+**Decision**: no React Query/SWR/React Hook Form (all moot without React). Reuse the reference stack's pattern instead: a shared `js/api/api-client.js` (real) and `js/api/api-client-mock.js` (mock) with identical method signatures, switched by `js/api/api-router.js` based on a `config/ui-config.json` `api.mode: "mock"|"real"` flag. Every page script calls only `apiClient.*`, never `fetch()` directly. Forms are plain vanilla JS — read values on submit, show/hide conditional warnings (e.g. the notice-period warning) with plain DOM show/hide, validate client-side as a UX mirror of the server check (never the source of truth).
 
 **Why**: direct consequence of §1 — no React means no React-ecosystem data/form libraries. The reference stack already solved "realistic mock data before the backend endpoint exists" (the same problem `08`'s `VITE_USE_MOCKS` flag solved) with this exact pattern, so it's reused rather than reinvented.
 
@@ -136,11 +136,11 @@ React components become either an injected HTML partial (header/footer/sidebar, 
 
 ## 17. HR admin pages built out; sidebar role-gating temporarily disabled for dev preview
 
-**Decision**: the six `hr-*.html` pages the sidebar already linked to (`hr-requests`, `hr-employees`, `hr-leave-types`, `hr-holidays`, `hr-lop-watchlist`, `hr-audit-log`) were built as read-only listings against the existing `hrX()` mock/real `apiClient` methods — they were dead links before. Separately, `components/sidebar.html`'s `data-requires-manager` / `data-requires-role="HR_ADMIN"` attributes (plus `hidden`) were removed from the "My Team" and "HR Admin" wrapper `<div>`s, so every nav section is visible regardless of session role. `js/auth-guard.js`'s `applyRoleVisibility()` mechanism itself is untouched — it just has no matching elements to act on right now. A `?role=HR_ADMIN` query-param override was also added to `api-client-mock.js`'s `me` fixture, independent of the gating toggle, so role-gated content can still be previewed once gating is restored.
+**Decision**: the six `hr-*.html` pages the sidebar already linked to (`hr-requests`, `hr-employees`, `hr-leave-types`, `hr-holidays`, `hr-lop-watchlist`, `hr-audit-log`) were built as read-only listings against the existing `hrX()` mock/real `apiClient` methods — they were dead links before. Separately, `components/sidebar.html`'s `data-requires-manager` / `data-requires-role="HR"` attributes (plus `hidden`) were removed from the "My Team" and "HR Admin" wrapper `<div>`s, so every nav section is visible regardless of session role. `js/auth-guard.js`'s `applyRoleVisibility()` mechanism itself is untouched — it just has no matching elements to act on right now. A `?role=HR` query-param override was also added to `api-client-mock.js`'s `me` fixture, independent of the gating toggle, so role-gated content can still be previewed once gating is restored.
 
 **Why**: explicit requests ("create good admin pages", "show all the pages in the sidebar").
 
-**How it applies**: re-add `data-requires-manager` / `data-requires-role="HR_ADMIN"` (+ `hidden`) to those two wrapper `div`s before this is anything more than a local dev preview — see the Open Items list below, this is a tracked reversal, not an oversight. `hr-employees.html` and `hr-holidays.html` are read-only for now — `flow.md`'s "CRUD" language for those pages is aspirational, not yet built (impose-LOP and holiday create/delete have client methods wired but no UI control calling them).
+**How it applies**: re-add `data-requires-manager` / `data-requires-role="HR"` (+ `hidden`) to those two wrapper `div`s before this is anything more than a local dev preview — see the Open Items list below, this is a tracked reversal, not an oversight. `hr-employees.html` and `hr-holidays.html` are read-only for now — `flow.md`'s "CRUD" language for those pages is aspirational, not yet built (impose-LOP and holiday create/delete have client methods wired but no UI control calling them).
 
 ## 18. One-on-One and Appraisal frontend modules built
 
@@ -182,7 +182,7 @@ React components become either an injected HTML partial (header/footer/sidebar, 
 - CSRF stance for `06-auth-and-security.md` (flagged in §5).
 - Whether the login response body should still echo user/role info (for the page to render a name/greeting) even though the token itself moves to a cookie.
 - Real production hosting mechanism for the static files, and how it stays same-origin with the API (flagged in §11) — not yet decided.
-- Sidebar role-gating is currently disabled (§17) — restore `data-requires-manager`/`data-requires-role="HR_ADMIN"` before this leaves local dev preview.
+- Sidebar role-gating is currently disabled (§17) — restore `data-requires-manager`/`data-requires-role="HR"` before this leaves local dev preview.
 - `hr-exit.html` (Exit Settlement review, `flow.md`'s HR flow) is still not built — `hrExit()`/`finalizeExit()` client methods exist and are wired, but there's no page or sidebar link yet.
 - HR override (`overrideLeaveRequest()`) and impose-LOP (`imposeLop()`) client methods exist but no page calls either — `leave-view.html` has no HR-override control, `hr-employees.html` has no impose-LOP control.
 - Mock fixtures (`getOneOnOneSession()`, `getLeaveRequest()`, `getAppraisal()`) ignore their `id` argument (§18/§8) — fine for previewing a single record, not for a real multi-record demo; would need id-aware fixtures before that matters.

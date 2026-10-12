@@ -1,0 +1,6 @@
+{
+  "appName": "Employee Hub",
+  "apiBaseUrl": "http://localhost:8080/api",
+  "mockMode": false,
+  "features": {}
+}
