@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-auth-pending="true">
+<html lang="en" data-auth-pending="true" data-access="hr">
 <head>
   <meta charset="utf-8">
   <title>Leave Types — Employee Hub</title>
@@ -26,17 +26,23 @@
         </div>
         <div id="hr-leave-types-error" class="alert alert-danger" hidden></div>
         <div id="hr-leave-types-success" class="alert alert-success" hidden></div>
+        <div class="card mb-3" style="max-width: 320px;">
+          <div class="card-body">
+            <div class="text-body-secondary small">Total entitlement (fixed-days types)</div>
+            <div class="h2 mb-0" id="hr-leave-types-total">—</div>
+          </div>
+        </div>
         <div class="card">
           <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-              <thead><tr><th></th><th>Name</th><th>Code</th><th>Entitlement</th><th>Advance notice</th><th>Situation-based</th><th>Notes</th></tr></thead>
+              <thead><tr><th></th><th>Name</th><th>Code</th><th>Entitlement</th><th>Advance notice</th><th>Notes</th></tr></thead>
               <tbody id="hr-leave-types-body"></tbody>
             </table>
           </div>
         </div>
 
         <!-- Add/Edit leave type popup — shared by the "Add leave type" button
-             above and each row's name link (js/page/hr-leave-types.js). -->
+             above and each row's name link (js/api/hr-leave-types.js). -->
         <div class="modal fade app-modal" id="leave-type-modal" tabindex="-1" aria-labelledby="leave-type-modal-title" aria-hidden="true">
           <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
@@ -52,22 +58,12 @@
                       <input type="text" id="lt-name" class="form-control" required>
                     </div>
                     <div class="col-sm-6">
-                      <label class="form-label" for="lt-code">Code</label>
-                      <input type="text" id="lt-code" class="form-control" required>
-                    </div>
-                    <div class="col-sm-6">
                       <label class="form-label" for="lt-entitlement">Entitlement</label>
                       <input type="text" id="lt-entitlement" class="form-control" placeholder="e.g. 14 days/year">
                     </div>
                     <div class="col-sm-6">
                       <label class="form-label" for="lt-notice">Advance notice (days)</label>
                       <input type="number" id="lt-notice" class="form-control" min="0" step="1">
-                    </div>
-                    <div class="col-12">
-                      <div class="form-check">
-                        <input type="checkbox" id="lt-situation" class="form-check-input">
-                        <label class="form-check-label" for="lt-situation">Situation-based</label>
-                      </div>
                     </div>
                     <div class="col-12">
                       <label class="form-label" for="lt-notes">Notes</label>
@@ -90,13 +86,13 @@
   <div id="footer-placeholder"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/utils.js"></script>
   <script src="js/config.js"></script>
-  <script src="js/api/api-client.js"></script>
-  <script src="js/api/api-client-mock.js"></script>
-  <script src="js/api/api-router.js"></script>
-  <script src="js/auth-guard.js"></script>
   <script src="js/loader.js"></script>
-  <script src="js/page/hr-leave-types.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script src="js/notification-bell.js"></script>
+  <script src="js/api/hr-leave-types.js"></script>
 </body>
 </html>

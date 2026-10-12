@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en" data-auth-pending="true">
+<html lang="en" data-auth-pending="true" data-access="manager">
 <head>
   <meta charset="utf-8">
-  <title>Team Leave Requests — Employee Hub</title>
+  <title>Team — Employee Hub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -19,91 +19,79 @@
       </nav>
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-4">
         <div class="d-flex align-items-center justify-content-between pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2 mb-0">Team leave requests</h1>
-          <button type="button" class="btn btn-outline-secondary" id="download-team-requests-csv">
-            <i class="bi bi-download"></i> Download CSV
-          </button>
+          <h1 class="h2 mb-0">Team</h1>
         </div>
         <!-- The sidebar link is hidden for non-managers, but this page still
              loads for anyone who navigates here directly — the server is the
              real gate (returns 403 on the API call, shown below as an
              error), this page never decides authorization itself. -->
         <div id="team-requests-error" class="alert alert-danger" hidden></div>
-        <div class="row g-2 mb-2">
-          <div class="col-sm-3">
-            <input type="text" id="filter-employee" class="form-control" list="filter-employee-options" placeholder="Employee" autocomplete="off">
-            <datalist id="filter-employee-options"></datalist>
-          </div>
-          <div class="col-sm-3">
-            <select id="filter-leave-type" class="form-select">
-              <option value="">All leave types</option>
-            </select>
-          </div>
-          <div class="col-sm-2">
-            <select id="filter-status" class="form-select">
-              <option value="">All statuses</option>
-            </select>
-          </div>
-          <div class="col-sm-2">
-            <input type="date" id="filter-date-from" class="form-control" aria-label="From date">
-          </div>
-          <div class="col-sm-2">
-            <input type="date" id="filter-date-to" class="form-control" aria-label="To date">
-          </div>
-        </div>
-        <div class="card">
+
+        <h2 class="h6">Who's on leave right now</h2>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 mb-4" id="on-leave-today"></div>
+
+        <h2 class="h6">Direct reports</h2>
+        <input type="search" class="form-control mb-2" style="max-width: 320px;" placeholder="Search employees…" data-filter-target="#team-list-body .team-member">
+        <div class="card mb-4">
           <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-              <thead><tr><th>Employee</th><th>Leave type</th><th>Dates</th><th>Status</th></tr></thead>
-              <tbody id="team-requests-body"></tbody>
+              <thead><tr><th>Name</th><th>Designation</th><th>Department</th></tr></thead>
+              <tbody id="team-list-body"></tbody>
             </table>
           </div>
         </div>
 
-        <div class="modal fade app-modal" id="request-modal" tabindex="-1" aria-labelledby="request-modal-title" aria-hidden="true">
+        <!-- Direct report detail popup — opened by clicking a name in the
+             table (js/api/manager-team.js). Read-only, no edit actions. -->
+        <div class="modal fade app-modal" id="member-detail-modal" tabindex="-1" aria-labelledby="member-detail-title" aria-hidden="true">
           <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
               <div class="modal-header">
-                <h2 class="modal-title" id="request-modal-title">Request detail</h2>
+                <div>
+                  <h2 class="modal-title" id="member-detail-title">Employee detail</h2>
+                  <div class="text-body-secondary small" id="member-detail-subtitle"></div>
+                </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <dl class="row mb-3">
-                  <dt class="col-4">Employee</dt><dd class="col-8" id="modal-detail-employee"></dd>
-                  <dt class="col-4">Leave type</dt><dd class="col-8" id="modal-detail-type"></dd>
-                  <dt class="col-4">Dates</dt><dd class="col-8" id="modal-detail-dates"></dd>
-                  <dt class="col-4">Status</dt><dd class="col-8" id="modal-detail-status"></dd>
-                  <dt class="col-4">Reason</dt><dd class="col-8" id="modal-detail-reason"></dd>
-                </dl>
-                <h3 class="h6">Approval timeline</h3>
-                <div id="modal-approval-timeline"></div>
-                <div id="modal-action-error" class="alert alert-danger mt-3" hidden></div>
+                <h3 class="h6">Leave remaining</h3>
+                <div class="table-responsive mb-3">
+                  <table class="table table-sm table-hover align-middle mb-0">
+                    <thead><tr><th>Leave type</th><th class="text-end">Balance</th></tr></thead>
+                    <tbody id="member-detail-balances"></tbody>
+                  </table>
+                </div>
+
+                <h3 class="h6">On leave today</h3>
+                <div class="mb-3" id="member-detail-on-leave"></div>
+
+                <h3 class="h6">Upcoming leave requests</h3>
+                <div id="member-detail-upcoming"></div>
               </div>
               <div class="modal-footer">
-                <button id="modal-approve-btn" class="btn btn-success" hidden>Approve</button>
-                <button id="modal-reject-btn" class="btn btn-outline-danger" hidden>Reject</button>
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
         </div>
+
       </main>
     </div>
   </div>
   <div id="footer-placeholder"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/utils.js"></script>
   <script src="js/config.js"></script>
-  <script src="js/api/api-client.js"></script>
-  <script src="js/api/api-client-mock.js"></script>
-  <script src="js/api/api-router.js"></script>
-  <script src="js/auth-guard.js"></script>
   <script src="js/loader.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script src="js/notification-bell.js"></script>
+  <script src="js/list-filter.js"></script>
+  <script src="js/leave-balance-card.js"></script>
   <script src="js/status-badge.js"></script>
-  <script src="js/approval-timeline.js"></script>
   <script src="js/request-filter.js"></script>
-  <script src="js/csv-export.js"></script>
-  <script src="js/page/manager-team-requests.js"></script>
+  <script src="js/api/manager-team.js"></script>
 </body>
 </html>

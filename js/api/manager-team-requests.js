@@ -1,6 +1,9 @@
+const REQUESTS_PAGE_SIZE = 10;
+
 let session = null;
 let requestModal = null;
 let allTeamRequests = [];
+let currentPage = 1;
 
 function getRequestModal() {
   if (!requestModal) requestModal = new bootstrap.Modal(document.getElementById("request-modal"));
@@ -18,7 +21,8 @@ function loadRequests() {
     .then((requests) => {
       allTeamRequests = requests;
       populateFilterOptions(requests);
-      renderRequests(requests);
+      currentPage = 1;
+      renderCurrentPage();
     })
     .catch((err) => {
       const errorEl = document.getElementById("team-requests-error");
@@ -47,17 +51,6 @@ function populateFilterOptions(requests) {
     const label = (STATUS_BADGE_MAP[status] || {}).label || status;
     statusSelect.insertAdjacentHTML("beforeend", '<option value="' + status + '">' + esc(label) + "</option>");
   });
-
-  const startDates = requests.map((r) => r.startDate).filter(Boolean).sort();
-  const endDates = requests.map((r) => r.endDate).filter(Boolean).sort();
-  if (startDates.length) {
-    document.getElementById("filter-date-from").min = startDates[0];
-    document.getElementById("filter-date-to").min = startDates[0];
-  }
-  if (endDates.length) {
-    document.getElementById("filter-date-from").max = endDates[endDates.length - 1];
-    document.getElementById("filter-date-to").max = endDates[endDates.length - 1];
-  }
 }
 
 function currentFilters() {
@@ -65,14 +58,47 @@ function currentFilters() {
     employee: document.getElementById("filter-employee").value.trim(),
     leaveType: document.getElementById("filter-leave-type").value,
     status: document.getElementById("filter-status").value,
-    dateFrom: document.getElementById("filter-date-from").value,
-    dateTo: document.getElementById("filter-date-to").value,
   };
 }
 
 function filteredRequests() {
   return allTeamRequests.filter((r) => requestMatchesFilters(r, currentFilters()));
 }
+
+// Client-side paging over the filtered set — the mock/real API both return
+// the full list in one call, there's no server-side page param to plug into.
+function renderCurrentPage() {
+  const filtered = filteredRequests();
+  const totalPages = Math.max(1, Math.ceil(filtered.length / REQUESTS_PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  const start = (currentPage - 1) * REQUESTS_PAGE_SIZE;
+  renderRequests(filtered.slice(start, start + REQUESTS_PAGE_SIZE));
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+  const container = document.getElementById("team-requests-pagination");
+  if (totalPages <= 1) {
+    container.innerHTML = "";
+    return;
+  }
+  const pageItem = (label, page, disabled, active) =>
+    '<li class="page-item' + (disabled ? " disabled" : "") + (active ? " active" : "") + '">' +
+    '<a class="page-link" href="#" data-page="' + page + '">' + label + "</a></li>";
+
+  let html = pageItem("Previous", currentPage - 1, currentPage === 1);
+  for (let p = 1; p <= totalPages; p++) html += pageItem(p, p, false, p === currentPage);
+  html += pageItem("Next", currentPage + 1, currentPage === totalPages);
+  container.innerHTML = html;
+}
+
+document.getElementById("team-requests-pagination").addEventListener("click", function (ev) {
+  const link = ev.target.closest("[data-page]");
+  if (!link || link.closest(".disabled") || link.closest(".active")) return;
+  ev.preventDefault();
+  currentPage = Number(link.getAttribute("data-page"));
+  renderCurrentPage();
+});
 
 function renderRequests(requests) {
   document.getElementById("team-requests-body").innerHTML = requests.length
@@ -83,16 +109,18 @@ function renderRequests(requests) {
             '<td><a href="#" data-request-id="' + encodeURIComponent(r.id) + '">' + esc(r.employeeName || "—") + "</a></td>" +
             "<td>" + esc(r.leaveTypeName) + "</td>" +
             "<td>" + formatDate(r.startDate) + " – " + formatDate(r.endDate) + "</td>" +
+            "<td>" + formatDateTime(r.appliedAt) + "</td>" +
             "<td>" + renderStatusBadge(r.status) + "</td>" +
             "</tr>"
         )
         .join("")
-    : '<tr><td colspan="4" class="text-center text-body-secondary py-4">No matching requests.</td></tr>';
+    : '<tr><td colspan="5" class="text-center text-body-secondary py-4">No matching requests.</td></tr>';
 }
 
-["filter-employee", "filter-leave-type", "filter-status", "filter-date-from", "filter-date-to"].forEach((id) => {
+["filter-employee", "filter-leave-type", "filter-status"].forEach((id) => {
   document.getElementById(id).addEventListener("input", function () {
-    renderRequests(filteredRequests());
+    currentPage = 1;
+    renderCurrentPage();
   });
 });
 
@@ -101,9 +129,10 @@ document.getElementById("download-team-requests-csv").addEventListener("click", 
     r.employeeName || "—",
     r.leaveTypeName,
     formatDate(r.startDate) + " – " + formatDate(r.endDate),
+    formatDateTime(r.appliedAt) || "—",
     (STATUS_BADGE_MAP[r.status] || {}).label || r.status,
   ]);
-  downloadCsv("team-leave-requests.csv", ["Employee", "Leave type", "Dates", "Status"], rows);
+  downloadCsv("team-leave-requests.csv", ["Employee", "Leave type", "Dates", "Requested", "Status"], rows);
 });
 
 document.getElementById("team-requests-body").addEventListener("click", function (ev) {
@@ -119,13 +148,14 @@ function openRequestModal(id) {
     document.getElementById("modal-detail-employee").textContent = request.employeeName || "—";
     document.getElementById("modal-detail-type").textContent = request.leaveTypeName;
     document.getElementById("modal-detail-dates").textContent = formatDate(request.startDate) + " – " + formatDate(request.endDate);
+    document.getElementById("modal-detail-requested").textContent = formatDateTime(request.appliedAt) || "—";
     document.getElementById("modal-detail-status").innerHTML = renderStatusBadge(request.status);
     document.getElementById("modal-detail-reason").textContent = request.reason || "—";
 
     renderApprovalTimeline(document.getElementById("modal-approval-timeline"), request.approvals || []);
 
     const currentStep = (request.approvals || []).find((s) => s.action === "PENDING");
-    const canAct = currentStep && ((currentStep.approverRole === "MANAGER" && session.isManager) || (currentStep.approverRole === "HR_ADMIN" && session.role === "HR_ADMIN"));
+    const canAct = currentStep && ((currentStep.approverRole === "MANAGER" && session.isManager) || (currentStep.approverRole === "HR" && session.role === "HR"));
     document.getElementById("modal-approve-btn").hidden = !canAct;
     document.getElementById("modal-reject-btn").hidden = !canAct;
     document.getElementById("modal-approve-btn").onclick = () => actOnRequest(id, "APPROVED");

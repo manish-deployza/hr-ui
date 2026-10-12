@@ -1,4 +1,10 @@
-document.addEventListener("session-ready", function () {
+document.addEventListener("session-ready", function (e) {
+  // Only nag on an explicit false — a backend that doesn't send the flag yet
+  // shouldn't spam every user.
+  if (e.detail && e.detail.emailVerified === false) {
+    document.getElementById("email-unverified-alert").hidden = false;
+  }
+
   apiClient
     .myBalances()
     .then((balances) => {

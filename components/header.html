@@ -1,19 +1,79 @@
 <!-- Top navbar — adapted from Bootstrap's Dashboard example. Injected into
      #header-placeholder by js/loader.js. The toggler opens the sidebar's
-     offcanvas below md width; see components/sidebar.html. -->
-<header class="navbar navbar-light sticky-top flex-md-nowrap p-0 shadow-sm">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="dashboard.html">Employee Hub</a>
-  <button class="navbar-toggler d-md-none collapsed" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <nav aria-label="breadcrumb" class="d-none d-md-block ms-3">
+     offcanvas below md width; see components/sidebar.html. Breadcrumb strip
+     sits in its own row below the navbar (breadcrumb-bar, css/styles.css) so
+     it no longer fights the toggler/user-menu for space on narrow screens. -->
+<header class="sticky-top">
+  <div class="navbar navbar-light flex-md-nowrap p-0 shadow-sm">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="dashboard.html">Employee Hub</a>
+    <button class="navbar-toggler d-md-none collapsed" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <span id="header-mock-badge" class="badge text-bg-warning ms-2" hidden title="config.json mockMode is true — no backend calls are made">DEV MODE</span>
+    <span id="header-org-name" class="navbar-org-name d-none d-md-block"></span>
+    <div class="d-flex ms-auto me-3 align-items-center gap-3">
+      <div class="dropdown">
+        <button class="user-avatar-btn position-relative" type="button" id="notification-bell-btn" aria-label="Notifications" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-bell" aria-hidden="true"></i>
+          <span id="notification-dot" class="notification-dot" hidden>
+            <span class="visually-hidden">Unread notifications</span>
+          </span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end notification-dropdown" aria-labelledby="notification-bell-btn">
+          <h6 class="dropdown-header d-flex justify-content-between align-items-center">
+            Notifications
+            <button type="button" id="notification-unread-toggle" class="btn btn-link btn-sm p-0" aria-pressed="false" onclick="toggleUnreadNotifications()">Unread only</button>
+          </h6>
+          <div id="notification-list"></div>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="user-avatar-btn" type="button" id="header-user-menu" aria-label="User menu" data-bs-toggle="dropdown" aria-expanded="false">
+          <img id="header-user-photo" alt="" hidden>
+          <i class="bi bi-person-circle" id="header-user-icon" aria-hidden="true"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="header-user-menu">
+          <li><h6 class="dropdown-header" id="header-user-name"></h6></li>
+          <li><a class="dropdown-item" href="profile.html"><i class="bi bi-person" aria-hidden="true"></i> Profile</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><button type="button" id="header-signout" class="dropdown-item"><i class="bi bi-box-arrow-right" aria-hidden="true"></i> Sign out</button></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <nav aria-label="breadcrumb" class="breadcrumb-bar px-3">
     <ol class="breadcrumb mb-0" id="header-breadcrumb"></ol>
   </nav>
-  <div class="navbar-nav flex-row d-flex ms-auto me-3 align-items-center gap-3">
-    <span id="notification-bell"></span>
-    <a href="profile.html" id="header-user-name" class="nav-link"></a>
-    <button id="header-signout" class="btn btn-sm btn-outline-secondary">
-      <i class="bi bi-box-arrow-right"></i> <span class="btn-label">Sign out</span>
-    </button>
-  </div>
 </header>
+
+<!-- Blocking overlay for in-flight mutations — driven by apiFetch in
+     js/utils.js (showLoading/hideLoading). See loading-overlay.md. -->
+<div id="loading-overlay" role="status" aria-live="polite" aria-label="Loading">
+  <div class="loading-content">
+    <div class="spinner-border text-primary" aria-hidden="true"></div>
+    <p class="loading-message">Please wait…</p>
+  </div>
+</div>
+
+<!-- API result / toast notifications — driven by showApiNotification() and
+     showToast() in js/utils.js. See api-response-handling.md. -->
+<div id="notification-stack" aria-live="polite"></div>
+
+<!-- Leave request detail, opened in place from a LEAVE_REQUEST notification
+     (js/notification-bell.js) instead of navigating to leave-view.html.
+     Reuses that page verbatim in an iframe (?embed=1 strips its own
+     header/sidebar, see body.embed-mode in css/styles.css) rather than
+     duplicating its markup or approve/reject/cancel logic. -->
+<div class="modal fade" id="leave-detail-modal" tabindex="-1" aria-labelledby="leave-detail-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title h5" id="leave-detail-modal-label">Request detail</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <iframe id="leave-detail-frame" title="Request detail" class="leave-detail-frame"></iframe>
+      </div>
+    </div>
+  </div>
+</div>

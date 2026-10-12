@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-auth-pending="true">
+<html lang="en" data-auth-pending="true" data-access="hr">
 <head>
   <meta charset="utf-8">
   <title>Appraisal Cycles — Employee Hub</title>
@@ -120,20 +120,198 @@
             </div>
           </div>
         </div>
+
+        <div class="d-flex align-items-center justify-content-between pt-2 pb-2 border-bottom">
+          <h2 class="h5 mb-0">Performance levels</h2>
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#levels-modal">
+            <i class="bi bi-pencil"></i> Edit levels
+          </button>
+        </div>
+        <p class="text-body-secondary small mb-2">Score-range &rarr; label used to translate a cycle's final weighted score (Goals &amp; KPIs 45% + Competencies 20% + Behaviour 15% + Learning 5% + Innovation 5% + Manager Overall Assessment 10%) into a performance level.</p>
+        <div class="card mb-3" style="max-width: 560px;">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead><tr><th>Min score</th><th>Max score</th><th>Label</th></tr></thead>
+              <tbody id="levels-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Performance levels popup — org-level score->label bands (not
+             per-cycle), edited as a whole list (js/api/hr-appraisal-cycles.js). -->
+        <div class="modal fade app-modal" id="levels-modal" tabindex="-1" aria-labelledby="levels-modal-title" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="levels-modal-title">Performance levels</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <p class="text-body-secondary small mb-0">Ranges shouldn't overlap or leave gaps — order doesn't matter, they're matched by score.</p>
+                  <button type="button" id="add-level-btn" class="btn btn-sm btn-outline-secondary text-nowrap"><i class="bi bi-plus-lg"></i> Add level</button>
+                </div>
+                <div id="levels-editor"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="save-levels" class="btn btn-primary"><i class="bi bi-check-circle"></i> Save levels</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category template popup — the rubric every manager review in
+             this cycle starts from (js/api/hr-appraisal-cycles.js,
+             js/eval-categories.js's tree ops, reused from
+             js/api/appraisal-view.js). No score/comment here — this is the
+             schema, not a scored review. -->
+        <div class="modal fade app-modal" id="categories-modal" tabindex="-1" aria-labelledby="categories-modal-title" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="categories-modal-title">Evaluation categories</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <p class="text-body-secondary small mb-0">Every manager review in this cycle starts from this rubric. Give a top-level category a weight to compute a final weighted score; leave weights at 0 for an unweighted rubric.</p>
+                  <div class="d-flex gap-2 text-nowrap">
+                    <button type="button" id="load-standard-schema-btn" class="btn btn-sm btn-outline-secondary"><i class="bi bi-magic"></i> Load standard schema</button>
+                    <button type="button" id="add-cycle-category-btn" class="btn btn-sm btn-outline-secondary"><i class="bi bi-plus-lg"></i> Add category</button>
+                  </div>
+                </div>
+                <div id="cycle-categories-editor"></div>
+                <p class="small mt-2 mb-0" id="cycle-categories-weight-total"></p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="save-cycle-categories" class="btn btn-primary"><i class="bi bi-check-circle"></i> Save categories</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roster popup — who's enrolled in this cycle, and a CSV import to
+             add more (js/api/hr-appraisal-cycles.js, js/parse-delimited.js —
+             same import mechanics as hr-employees.html's bulk upload). -->
+        <div class="modal fade app-modal" id="roster-modal" tabindex="-1" aria-labelledby="roster-modal-title" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="roster-modal-title">Roster</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div id="roster-error" class="alert alert-danger" hidden></div>
+                <div id="roster-success" class="alert alert-success" hidden></div>
+                <form id="roster-import-form" class="row g-2 align-items-end mb-3">
+                  <div class="col">
+                    <label class="form-label" for="roster-file">Import roster</label>
+                    <input type="file" id="roster-file" class="form-control" accept=".csv,.tsv,text/csv,text/tab-separated-values" required>
+                    <div class="form-text">Header row: name, dateOfJoining, email, manager, organization. Matched to an existing employee by email.</div>
+                  </div>
+                  <div class="col-auto">
+                    <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-upload"></i> Import</button>
+                  </div>
+                </form>
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0">
+                    <thead><tr><th>Employee</th><th>Department</th><th>Manager</th><th>Status</th><th>Self rating</th><th>Manager rating</th><th>Score</th><th>Level</th><th></th></tr></thead>
+                    <tbody id="roster-body"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Return-to-manager popup — HR sends a review back to the manager
+             for revision (js/appraisal-status.js's RETURNED state). Reason is
+             required so the manager knows what to fix. -->
+        <div class="modal fade app-modal" id="return-modal" tabindex="-1" aria-labelledby="return-modal-title" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="return-modal-title">Return to manager</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="return-form">
+                  <label class="form-label" for="return-reason">Reason</label>
+                  <textarea id="return-reason" class="form-control" rows="3" placeholder="e.g. Manager justification insufficient" required></textarea>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="return-form" class="btn btn-warning">Return</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calibration popup — 18-appraisal-enterprise-expansion.md's HR
+             Calibration section: department averages, then a self/manager/
+             calibrated comparison per employee. Calibrating doesn't move
+             status (that's the roster popup's Calibrate/Finalize buttons) —
+             it only sets the score HR wants used as the effective final
+             score wherever one is shown (js/mock-data.js's finalScoreFor). -->
+        <div class="modal fade app-modal" id="calibration-modal" tabindex="-1" aria-labelledby="calibration-modal-title" aria-hidden="true">
+          <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="calibration-modal-title">Calibration</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div id="calibration-error" class="alert alert-danger" hidden></div>
+
+                <h3 class="h6">Calibration panel</h3>
+                <p class="text-body-secondary small mb-2">Department averages use each employee's effective score (calibrated if set, otherwise the manager's). A gap between departments is a prompt to investigate rating standards, not proof one team outperformed another.</p>
+                <div class="card mb-3" style="max-width: 420px;">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                      <thead><tr><th>Department</th><th>Avg score</th></tr></thead>
+                      <tbody id="calibration-departments"></tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <h3 class="h6">Self vs. manager vs. calibrated</h3>
+                <p class="text-body-secondary small mb-2">A reason is required only when the calibrated score is entered and actually differs from the manager's score.</p>
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0">
+                    <thead><tr><th>Employee</th><th>Self</th><th>Manager</th><th>Calibrated</th><th>Reason</th><th></th></tr></thead>
+                    <tbody id="calibration-rows"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   </div>
   <div id="footer-placeholder"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/utils.js"></script>
   <script src="js/config.js"></script>
-  <script src="js/api/api-client.js"></script>
-  <script src="js/api/api-client-mock.js"></script>
-  <script src="js/api/api-router.js"></script>
-  <script src="js/auth-guard.js"></script>
   <script src="js/loader.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script src="js/notification-bell.js"></script>
   <script src="js/status-badge.js"></script>
-  <script src="js/page/hr-appraisal-cycles.js"></script>
+  <script src="js/appraisal-status.js"></script>
+  <script src="js/parse-delimited.js"></script>
+  <script src="js/eval-categories.js"></script>
+  <script src="js/api/hr-appraisal-cycles.js"></script>
 </body>
 </html>

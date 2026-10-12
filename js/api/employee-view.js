@@ -24,7 +24,9 @@ function render(employee, employees) {
   document.title = employee.name + " — Employee Hub";
   document.getElementById("detail-name").textContent = employee.name;
   document.getElementById("detail-code").textContent = employee.employeeCode || "—";
-  document.getElementById("detail-email").textContent = employee.email;
+  document.getElementById("detail-email").innerHTML = esc(employee.email) + (employee.emailVerified
+    ? ' <span class="badge text-bg-success"><i class="bi bi-patch-check-fill"></i> Verified</span>'
+    : ' <span class="badge text-bg-secondary">Not verified</span>');
   document.getElementById("detail-phone").textContent = employee.phone || "—";
 
   const isManager = managersOf(employees).some((m) => m.id === employee.id);

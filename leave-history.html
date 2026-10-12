@@ -20,14 +20,64 @@
         <div id="sidebar-placeholder"></div>
       </nav>
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-4">
-        <h1 class="h2 pt-3 pb-2 mb-3 border-bottom">My leave requests</h1>
+        <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2 mb-0">My leave requests</h1>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#apply-modal">
+            <i class="bi bi-plus-circle"></i> Apply for Leave
+          </button>
+        </div>
         <input type="search" class="form-control mb-2" style="max-width: 320px;" placeholder="Search leave type, status…" data-filter-target="#history-body tr">
         <div class="card">
           <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-              <thead><tr><th>Leave type</th><th>Dates</th><th>Status</th><th></th></tr></thead>
+              <thead><tr><th>Leave type</th><th>Dates</th><th>Requested</th><th>Status</th><th></th></tr></thead>
               <tbody id="history-body"></tbody>
             </table>
+          </div>
+        </div>
+
+        <div class="modal fade app-modal" id="request-modal" tabindex="-1" aria-labelledby="request-modal-title" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="request-modal-title">Request detail</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <dl class="row mb-3">
+                  <dt class="col-4">Leave type</dt><dd class="col-8" id="modal-detail-type"></dd>
+                  <dt class="col-4">Dates</dt><dd class="col-8" id="modal-detail-dates"></dd>
+                  <dt class="col-4">Requested</dt><dd class="col-8" id="modal-detail-requested"></dd>
+                  <dt class="col-4">Status</dt><dd class="col-8" id="modal-detail-status"></dd>
+                  <dt class="col-4">Reason</dt><dd class="col-8" id="modal-detail-reason"></dd>
+                </dl>
+                <h3 class="h6">Approval timeline</h3>
+                <div id="modal-approval-timeline"></div>
+                <div id="modal-action-error" class="alert alert-danger mt-3" hidden></div>
+              </div>
+              <div class="modal-footer">
+                <button id="modal-cancel-btn" class="btn btn-outline-secondary" hidden>Cancel request</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade app-modal" id="apply-modal" tabindex="-1" aria-labelledby="apply-modal-title" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="apply-modal-title">Apply for leave</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div id="apply-success" class="alert alert-success" hidden></div>
+                <div id="apply-error" class="alert alert-danger" hidden></div>
+                <form class="needs-validation" novalidate>
+                  <div id="leave-request-form"></div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -36,15 +86,17 @@
   <div id="footer-placeholder"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/utils.js"></script>
   <script src="js/config.js"></script>
-  <script src="js/api/api-client.js"></script>
-  <script src="js/api/api-client-mock.js"></script>
-  <script src="js/api/api-router.js"></script>
-  <script src="js/auth-guard.js"></script>
   <script src="js/loader.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script src="js/notification-bell.js"></script>
   <script src="js/list-filter.js"></script>
   <script src="js/status-badge.js"></script>
-  <script src="js/page/leave-history.js"></script>
+  <script src="js/approval-timeline.js"></script>
+  <script src="js/leave-request-form.js"></script>
+  <script src="js/api/leave-history.js"></script>
 </body>
 </html>

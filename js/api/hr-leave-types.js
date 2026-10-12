@@ -31,12 +31,13 @@ function loadLeaveTypes() {
                 "<td><code>" + esc(t.code) + "</code></td>" +
                 "<td>" + esc(t.daysPerYear || "—") + "</td>" +
                 "<td>" + (t.requiresAdvanceNoticeDays ? t.requiresAdvanceNoticeDays + " days" : "—") + "</td>" +
-                "<td>" + (t.requiresSituationType ? '<i class="bi bi-check-circle-fill text-success"></i>' : '<i class="bi bi-dash text-body-secondary"></i>') + "</td>" +
                 "<td>" + esc(t.infoNote || "—") + "</td>" +
                 "</tr>"
             )
             .join("")
-        : '<tr><td colspan="7" class="text-center text-body-secondary py-4">No leave types.</td></tr>';
+        : '<tr><td colspan="6" class="text-center text-body-secondary py-4">No leave types.</td></tr>';
+
+      updateTotalEntitlement(types);
     })
     .catch((err) => {
       showError(err.message || "Could not load leave types.");
@@ -54,7 +55,12 @@ let editingLeaveTypeId = null;
 let leaveTypeModal = null;
 
 function getLeaveTypeModal() {
-  if (!leaveTypeModal) leaveTypeModal = new bootstrap.Modal(document.getElementById("leave-type-modal"));
+  // getOrCreateInstance, not `new` — the "Add leave type" button opens this
+  // via data-bs-toggle, which creates its own Modal instance on first click;
+  // `new` here would create a second, competing instance for the same
+  // element and desync the X/Cancel data-bs-dismiss buttons (see
+  // hr-employees.js's getEmployeeModal for the same fix).
+  if (!leaveTypeModal) leaveTypeModal = bootstrap.Modal.getOrCreateInstance(document.getElementById("leave-type-modal"));
   return leaveTypeModal;
 }
 
@@ -75,15 +81,24 @@ function openLeaveTypeModal(id) {
   editingLeaveTypeId = leaveType.id;
   document.getElementById("leave-type-modal-title").textContent = "Edit leave type";
   document.getElementById("lt-name").value = leaveType.name || "";
-  document.getElementById("lt-code").value = leaveType.code || "";
   document.getElementById("lt-entitlement").value = leaveType.daysPerYear || "";
   document.getElementById("lt-notice").value = leaveType.requiresAdvanceNoticeDays || "";
-  document.getElementById("lt-situation").checked = !!leaveType.requiresSituationType;
   document.getElementById("lt-notes").value = leaveType.infoNote || "";
 
   document.getElementById("leave-type-submit-label").textContent = "Save changes";
   document.getElementById("leave-type-delete").hidden = false;
   getLeaveTypeModal().show();
+}
+
+function updateTotalEntitlement(types) {
+  // daysPerYear is free text ("14 days/year", "Up to 26 weeks", "1 month", ...);
+  // only sum entries that lead with a plain day count, so caps/weeks/months
+  // don't get miscounted as days.
+  const total = types.reduce((sum, t) => {
+    const match = /^\s*(\d+)\s*days?\b/i.exec(t.daysPerYear || "");
+    return match ? sum + Number(match[1]) : sum;
+  }, 0);
+  document.getElementById("hr-leave-types-total").textContent = total + " days";
 }
 
 function showError(message) {
@@ -106,10 +121,8 @@ document.getElementById("leave-type-form").addEventListener("submit", function (
 
   const payload = {
     name: document.getElementById("lt-name").value.trim(),
-    code: document.getElementById("lt-code").value.trim(),
     daysPerYear: document.getElementById("lt-entitlement").value.trim(),
     requiresAdvanceNoticeDays: document.getElementById("lt-notice").value ? Number(document.getElementById("lt-notice").value) : null,
-    requiresSituationType: document.getElementById("lt-situation").checked,
     infoNote: document.getElementById("lt-notes").value.trim(),
   };
 

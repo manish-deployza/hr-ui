@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-auth-pending="true">
+<html lang="en" data-auth-pending="true" data-access="hr">
 <head>
   <meta charset="utf-8">
   <title>Holidays — Employee Hub</title>
@@ -18,9 +18,18 @@
         <div id="sidebar-placeholder"></div>
       </nav>
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 pb-4">
-        <h1 class="h2 pt-3 pb-2 mb-3 border-bottom">Holidays</h1>
-        <p class="text-body-secondary">8 compulsory public holidays below, plus 2 floating optional days employees can apply for individually (see <a href="hr-leave-types.html">Leave Types â†’ Optional Holiday</a>) — 10 in total per policy.</p>
+        <div class="d-flex align-items-center justify-content-between pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2 mb-0" id="holidays-title">Holidays</h1>
+          <div class="d-flex align-items-center gap-2">
+            <label class="form-label mb-0" for="holidays-year-filter">Year</label>
+            <select id="holidays-year-filter" class="form-select form-select-sm" style="width: auto;"></select>
+            <button type="button" class="btn btn-primary" id="add-holiday" data-bs-toggle="modal" data-bs-target="#holiday-modal">
+              <i class="bi bi-plus-lg"></i> Add Holiday
+            </button>
+          </div>
+        </div>
         <div id="hr-holidays-error" class="alert alert-danger" hidden></div>
+        <div id="hr-holidays-success" class="alert alert-success" hidden></div>
 
         <h2 class="h6">National holidays (non-negotiable)</h2>
         <div class="card mb-4">
@@ -41,19 +50,59 @@
             </table>
           </div>
         </div>
+
+        <!-- Add/Edit Holiday popup — shared by the "Add Holiday" button above
+             and each row's name link (js/api/hr-holidays.js), same pattern as
+             hr-leave-types.html's leave-type modal. No year field: the server
+             derives it from the date. -->
+        <div class="modal fade app-modal" id="holiday-modal" tabindex="-1" aria-labelledby="holiday-modal-title" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2 class="modal-title" id="holiday-modal-title">Add Holiday</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="holiday-form">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label" for="h-name">Name</label>
+                      <input type="text" id="h-name" class="form-control" required>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="h-date">Date</label>
+                      <input type="date" id="h-date" class="form-control" required>
+                    </div>
+                    <div class="col-12">
+                      <div class="form-check">
+                        <input type="checkbox" id="h-non-negotiable" class="form-check-input">
+                        <label class="form-check-label" for="h-non-negotiable">National (non-negotiable)</label>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-danger me-auto" id="holiday-delete" hidden><i class="bi bi-trash"></i> Delete</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="holiday-form" class="btn btn-primary"><i class="bi bi-check-circle"></i> <span id="holiday-submit-label">Add Holiday</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   </div>
   <div id="footer-placeholder"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/utils.js"></script>
   <script src="js/config.js"></script>
-  <script src="js/api/api-client.js"></script>
-  <script src="js/api/api-client-mock.js"></script>
-  <script src="js/api/api-router.js"></script>
-  <script src="js/auth-guard.js"></script>
   <script src="js/loader.js"></script>
-  <script src="js/page/hr-holidays.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api-client.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth-guard.js"></script>
+  <script src="js/notification-bell.js"></script>
+  <script src="js/api/hr-holidays.js"></script>
 </body>
 </html>
