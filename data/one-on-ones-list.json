@@ -1,0 +1,4 @@
+[
+  { "id": 201, "managerId": 1, "employeeId": 2, "otherPartyName": "Alex Kim", "scheduledAt": "2026-08-22T15:00:00", "status": "SCHEDULED" },
+  { "id": 200, "managerId": 1, "employeeId": 2, "otherPartyName": "Alex Kim", "scheduledAt": "2026-08-08T15:00:00", "status": "COMPLETED" }
+]

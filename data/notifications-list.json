@@ -1,0 +1,4 @@
+[
+  { "id": 1, "employeeId": 1, "type": "LEAVE_APPROVED", "title": "Leave approved", "message": "Your Privilege Leave request (Jul 10 – Jul 12) was approved.", "relatedEntityType": "LEAVE_REQUEST", "relatedEntityId": 100, "isRead": false, "createdAt": "2026-07-09T15:05:00" },
+  { "id": 2, "employeeId": 1, "type": "LEAVE_APPLIED", "title": "Team request awaiting you", "message": "Alex Kim applied for Casual Leave (Aug 21).", "relatedEntityType": "LEAVE_REQUEST", "relatedEntityId": 102, "isRead": false, "createdAt": "2026-08-18T11:20:00" }
+]

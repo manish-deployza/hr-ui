@@ -1,0 +1,7 @@
+[
+  { "id": 1, "minScore": 4.5, "maxScore": 5.0, "label": "Exceptional" },
+  { "id": 2, "minScore": 4.0, "maxScore": 4.49, "label": "Exceeds Expectations" },
+  { "id": 3, "minScore": 3.0, "maxScore": 3.99, "label": "Meets Expectations" },
+  { "id": 4, "minScore": 2.0, "maxScore": 2.99, "label": "Partially Meets Expectations" },
+  { "id": 5, "minScore": 1.0, "maxScore": 1.99, "label": "Does Not Meet Expectations" }
+]

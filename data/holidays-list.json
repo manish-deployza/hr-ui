@@ -1,0 +1,14 @@
+[
+  { "id": 1, "name": "Republic Day", "date": "2026-01-26", "year": 2026, "nonNegotiable": true },
+  { "id": 2, "name": "Cheti Chand", "date": "2026-03-20", "year": 2026 },
+  { "id": 3, "name": "Ram Navami", "date": "2026-03-27", "year": 2026 },
+  { "id": 4, "name": "Good Friday", "date": "2026-04-03", "year": 2026 },
+  { "id": 5, "name": "Buddha Purnima", "date": "2026-05-01", "year": 2026 },
+  { "id": 6, "name": "Muharram", "date": "2026-06-26", "year": 2026 },
+  { "id": 7, "name": "Independence Day", "date": "2026-08-15", "year": 2026, "nonNegotiable": true },
+  { "id": 8, "name": "Gandhi Jayanti", "date": "2026-10-02", "year": 2026, "nonNegotiable": true }
+]
+
+
+
+

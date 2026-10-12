@@ -1,0 +1,17 @@
+{
+  "1": [
+    { "leaveTypeId": 1, "leaveTypeCode": "CL", "leaveTypeName": "Casual Leave", "balance": 6 },
+    { "leaveTypeId": 2, "leaveTypeCode": "PL", "leaveTypeName": "Privilege Leave", "balance": 9.6 },
+    { "leaveTypeId": 3, "leaveTypeCode": "OPTIONAL_HOLIDAY", "leaveTypeName": "Optional Holiday", "balance": 1 }
+  ],
+  "2": [
+    { "leaveTypeId": 1, "leaveTypeCode": "CL", "leaveTypeName": "Casual Leave", "balance": 0 },
+    { "leaveTypeId": 2, "leaveTypeCode": "PL", "leaveTypeName": "Privilege Leave", "balance": 0 },
+    { "leaveTypeId": 3, "leaveTypeCode": "OPTIONAL_HOLIDAY", "leaveTypeName": "Optional Holiday", "balance": 2 }
+  ],
+  "3": [
+    { "leaveTypeId": 1, "leaveTypeCode": "CL", "leaveTypeName": "Casual Leave", "balance": 9 },
+    { "leaveTypeId": 2, "leaveTypeCode": "PL", "leaveTypeName": "Privilege Leave", "balance": 6.4 },
+    { "leaveTypeId": 3, "leaveTypeCode": "OPTIONAL_HOLIDAY", "leaveTypeName": "Optional Holiday", "balance": 2 }
+  ]
+}

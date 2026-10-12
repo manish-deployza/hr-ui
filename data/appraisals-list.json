@@ -1,0 +1,19 @@
+[
+  {
+    "id": 401, "cycleId": 1, "employeeId": 1, "employeeName": "Jordan Lee", "managerId": null, "status": "MANAGER_REVIEW",
+    "snapshot": { "name": "Jordan Lee", "email": "jordan.lee@example.com", "department": "Engineering", "designation": "Engineering Manager", "managerName": null, "organization": "Deployza", "dateOfJoining": "2021-03-15" },
+    "selfRatingValueId": 3, "selfComments": "Shipped the leave management MVP ahead of schedule.",
+    "managerRatingValueId": null, "managerComments": null, "managerCategories": [],
+    "goals": [
+      { "id": 501, "description": "Ship leave management MVP", "status": "ACHIEVED" },
+      { "id": 502, "description": "Mentor new hire", "status": "IN_PROGRESS" }
+    ]
+  },
+  {
+    "id": 402, "cycleId": 1, "employeeId": 2, "employeeName": "Alex Kim", "managerId": 1, "status": "MANAGER_REVIEW",
+    "snapshot": { "name": "Alex Kim", "email": "alex.kim@example.com", "department": "Engineering", "designation": "Software Engineer", "managerName": "Jordan Lee", "organization": "Deployza", "dateOfJoining": "2023-01-10" },
+    "selfRatingValueId": 2, "selfComments": "Shipped the CSV bulk-upload and reassignment tooling this half.",
+    "managerRatingValueId": null, "managerComments": null, "managerCategories": [],
+    "goals": [{ "id": 511, "description": "Own the HR employee-admin screens", "status": "IN_PROGRESS" }]
+  }
+]

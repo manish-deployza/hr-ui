@@ -1,0 +1,13 @@
+{
+  "id": 201,
+  "managerId": 1,
+  "employeeId": 2,
+  "otherPartyName": "Alex Kim",
+  "scheduledAt": "2026-08-22T15:00:00",
+  "status": "SCHEDULED",
+  "sharedAgenda": "Discuss Q3 goals progress.",
+  "managerPrivateNotes": "Doing well, consider for the stretch project.",
+  "actionItems": [
+    { "id": 301, "description": "Send updated project doc", "ownerEmployeeId": 2, "dueDate": "2026-08-25", "status": "OPEN" }
+  ]
+}

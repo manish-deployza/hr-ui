@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1, "name": "H1 2026", "startDate": "2026-01-01", "endDate": "2026-06-30", "selfReviewDeadline": "2026-07-05", "managerReviewDeadline": "2026-07-20", "status": "OPEN",
+    "categories": [
+      {
+        "id": "cat-1", "name": "Coding", "score": null, "comment": "",
+        "subsections": [
+          { "id": "cat-1-1", "name": "Code quality", "score": null, "comment": "", "subsections": [] },
+          { "id": "cat-1-2", "name": "Testing", "score": null, "comment": "", "subsections": [] }
+        ]
+      },
+      { "id": "cat-2", "name": "Core values", "score": null, "comment": "", "subsections": [] },
+      { "id": "cat-3", "name": "Availability", "score": null, "comment": "", "subsections": [] }
+    ]
+  }
+]

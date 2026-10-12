@@ -1,0 +1,12 @@
+[
+  { "id": 1, "name": "Casual Leave", "code": "CL", "daysPerYear": "14 days/year", "infoNote": "Includes sick leave. CL + PL = 24 days." },
+  { "id": 2, "name": "Privilege Leave", "code": "PL", "daysPerYear": "10 days/year", "infoNote": "0.8 day/month, credited quarterly (Jan/Apr/Jul/Sep). Carry-forward capped at 5 days." },
+  { "id": 3, "name": "Optional Holiday", "code": "OPTIONAL_HOLIDAY", "daysPerYear": "2 days/year", "infoNote": "Floating holiday for festivals not on the org calendar." },
+  { "id": 4, "name": "Marriage Leave", "code": "MARRIAGE", "daysPerYear": "5 days", "requiresAdvanceNoticeDays": 30, "infoNote": "Flat 5 days." },
+  { "id": 5, "name": "Maternity Leave", "code": "MATERNITY", "daysPerYear": "Up to 26 weeks", "requiresAdvanceNoticeDays": 30, "infoNote": "Up to 26 weeks, per policy." },
+  { "id": 6, "name": "Paternity Leave", "code": "PATERNITY", "daysPerYear": "15 days", "requiresAdvanceNoticeDays": 30, "infoNote": "Flat 15 calendar days." },
+  { "id": 7, "name": "Sabbatical", "code": "SABBATICAL", "daysPerYear": "1 month", "infoNote": "1 month, unpaid. Requires Manager and HR approval." },
+  { "id": 8, "name": "Loss of Pay", "code": "LOP", "daysPerYear": "Up to 15 days/year", "infoNote": "Only available once Casual Leave and Privilege Leave balances are both exhausted. Capped at 15 working days/year." },
+  { "id": 9, "name": "Intern Study Leave", "code": "INTERN_STUDY", "daysPerYear": "Per policy", "infoNote": "Applicable to interns only (employee_type = INTERN)." },
+  { "id": 10, "name": "Public Holiday", "code": "PUBLIC_HOLIDAY", "daysPerYear": "Calendar-driven", "infoNote": "Not applied for — driven by the organization's holiday calendar (see public_holiday table)." }
+]

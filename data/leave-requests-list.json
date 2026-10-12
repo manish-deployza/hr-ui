@@ -1,0 +1,76 @@
+[
+  {
+    "id": 95, "employeeId": 1, "employeeName": "Jordan Lee", "leaveTypeId": 7, "leaveTypeCode": "SABBATICAL", "leaveTypeName": "Sabbatical",
+    "startDate": "2026-10-01", "endDate": "2026-10-31", "numDays": 31, "status": "PENDING_HR", "reason": "Writing a book on distributed systems",
+    "approvals": [
+      { "stepOrder": 1, "approverRole": "MANAGER", "approverEmployeeId": 1, "action": "APPROVED", "comments": "Approved as self-manager per handbook §4.", "actedAt": "2026-08-10T10:00:00" },
+      { "stepOrder": 2, "approverRole": "HR", "approverEmployeeId": null, "action": "PENDING" }
+    ]
+  },
+  {
+    "id": 96, "employeeId": 1, "employeeName": "Jordan Lee", "leaveTypeId": 4, "leaveTypeCode": "MARRIAGE", "leaveTypeName": "Marriage Leave",
+    "startDate": "2026-11-20", "endDate": "2026-11-24", "numDays": 5, "status": "PENDING_MANAGER", "reason": "Wedding",
+    "approvals": [{ "stepOrder": 1, "approverRole": "MANAGER", "approverEmployeeId": null, "action": "PENDING" }]
+  },
+  {
+    "id": 97, "employeeId": 1, "employeeName": "Jordan Lee", "leaveTypeId": 2, "leaveTypeCode": "PL", "leaveTypeName": "Privilege Leave",
+    "startDate": "2026-03-10", "endDate": "2026-03-11", "numDays": 2, "status": "LAPSED", "reason": "Sister's function",
+    "approvals": [{ "stepOrder": 1, "approverRole": "MANAGER", "approverEmployeeId": null, "action": "PENDING" }]
+  },
+  {
+    "id": 98, "employeeId": 1, "employeeName": "Jordan Lee", "leaveTypeId": 3, "leaveTypeCode": "OPTIONAL_HOLIDAY", "leaveTypeName": "Optional Holiday",
+    "startDate": "2026-05-01", "endDate": "2026-05-01", "numDays": 1, "status": "CANCELLED", "reason": "Local festival",
+    "approvals": [{ "stepOrder": 1, "approverRole": "MANAGER", "approverEmployeeId": 4, "action": "APPROVED", "actedAt": "2026-04-20T09:00:00" }],
+    "cancelledAt": "2026-04-25T08:00:00"
+  },
+  {
+    "id": 99, "employeeId": 1, "employeeName": "Jordan Lee", "leaveTypeId": 1, "leaveTypeCode": "CL", "leaveTypeName": "Casual Leave",
+    "startDate": "2026-06-02", "endDate": "2026-06-02", "numDays": 1, "status": "REJECTED", "reason": "Personal errand",
+    "approvals": [{ "stepOrder": 1, "approverRole": "MANAGER", "approverEmployeeId": 4, "action": "REJECTED", "comments": "Critical release week, please reschedule.", "actedAt": "2026-06-01T10:00:00" }]
+  },
+  {
+    "id": 100, "employeeId": 1, "employeeName": "Jordan Lee", "leaveTypeId": 2, "leaveTypeCode": "PL", "leaveTypeName": "Privilege Leave",
+    "startDate": "2026-07-10", "endDate": "2026-07-12", "numDays": 3, "status": "APPROVED", "reason": "Family trip",
+    "approvals": [
+      { "stepOrder": 1, "approverRole": "MANAGER", "approverEmployeeId": 4, "action": "APPROVED", "actedAt": "2026-07-08T12:00:00" },
+      { "stepOrder": 2, "approverRole": "HR", "approverEmployeeId": 4, "action": "APPROVED", "actedAt": "2026-07-09T15:00:00" }
+    ]
+  },
+  {
+    "id": 101, "employeeId": 1, "employeeName": "Jordan Lee", "leaveTypeId": 1, "leaveTypeCode": "CL", "leaveTypeName": "Casual Leave",
+    "startDate": "2026-08-25", "endDate": "2026-08-26", "numDays": 2, "status": "PENDING_MANAGER", "reason": "Family function",
+    "approvals": [{ "stepOrder": 1, "approverRole": "MANAGER", "approverEmployeeId": null, "action": "PENDING" }]
+  },
+  {
+    "id": 102, "employeeId": 2, "employeeName": "Alex Kim", "leaveTypeId": 1, "leaveTypeCode": "CL", "leaveTypeName": "Casual Leave",
+    "startDate": "2026-08-21", "endDate": "2026-08-21", "numDays": 1, "status": "PENDING_MANAGER", "reason": "Dentist appointment",
+    "approvals": [{ "stepOrder": 1, "approverRole": "MANAGER", "approverEmployeeId": null, "action": "PENDING" }]
+  },
+  {
+    "id": 103, "employeeId": 2, "employeeName": "Alex Kim", "leaveTypeId": 8, "leaveTypeCode": "LOP", "leaveTypeName": "Loss of Pay",
+    "startDate": "2026-07-20", "endDate": "2026-08-07", "numDays": 15, "status": "APPROVED", "reason": "—", "isHrImposed": true,
+    "hrNotes": "Imposed after CL/PL balances were exhausted; no return-from-leave application filed within the required window.",
+    "approvals": [{ "stepOrder": 1, "approverRole": "HR", "approverEmployeeId": 4, "action": "APPROVED", "comments": "HR-imposed LOP per policy.", "actedAt": "2026-07-20T09:00:00" }]
+  },
+  {
+    "id": 104, "employeeId": 3, "employeeName": "Priya Sharma", "leaveTypeId": 2, "leaveTypeCode": "PL", "leaveTypeName": "Privilege Leave",
+    "startDate": "2026-04-15", "endDate": "2026-04-16", "numDays": 2, "status": "APPROVED", "reason": "Cousin's wedding",
+    "approvals": [
+      { "stepOrder": 1, "approverRole": "MANAGER", "approverEmployeeId": 1, "action": "APPROVED", "actedAt": "2026-04-10T09:00:00" },
+      { "stepOrder": 2, "approverRole": "HR", "approverEmployeeId": 4, "action": "APPROVED", "actedAt": "2026-04-11T09:00:00" }
+    ]
+  },
+  {
+    "id": 105, "employeeId": 3, "employeeName": "Priya Sharma", "leaveTypeId": 5, "leaveTypeCode": "MATERNITY", "leaveTypeName": "Maternity Leave",
+    "startDate": "2026-09-01", "endDate": "2027-03-01", "numDays": 182, "status": "PENDING_HR", "reason": "Maternity leave",
+    "approvals": [
+      { "stepOrder": 1, "approverRole": "MANAGER", "approverEmployeeId": 1, "action": "APPROVED", "actedAt": "2026-07-25T09:00:00" },
+      { "stepOrder": 2, "approverRole": "HR", "approverEmployeeId": null, "action": "PENDING" }
+    ]
+  },
+  {
+    "id": 106, "employeeId": 2, "employeeName": "Alex Kim", "leaveTypeId": 1, "leaveTypeCode": "CL", "leaveTypeName": "Casual Leave",
+    "startDate": "2026-08-19", "endDate": "2026-08-21", "numDays": 3, "status": "APPROVED", "reason": "Family visit",
+    "approvals": [{ "stepOrder": 1, "approverRole": "MANAGER", "approverEmployeeId": 1, "action": "APPROVED", "actedAt": "2026-08-15T09:00:00" }]
+  }
+]
